@@ -9,6 +9,7 @@ import '../../features/market/market_viewmodel.dart';
 import '../../features/search/search_viewmodel.dart';
 import 'api_service.dart';
 import 'storage_service.dart';
+import 'theme_provider.dart';
 
 final GetIt i = GetIt.instance;
 
@@ -16,6 +17,9 @@ void setupInjections() {
   // Services
   i.registerLazySingleton<ApiService>(() => ApiService());
   i.registerLazySingleton<StorageService>(() => StorageService());
+  
+  // Providers
+  i.registerLazySingleton<ThemeProvider>(() => ThemeProvider());
   
   // Data sources
   i.registerLazySingleton<CoinDataSource>(
