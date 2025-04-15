@@ -1,3 +1,4 @@
+import 'package:brasil_cripto/utils/state_ful_base_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class MarketView extends StatefulWidget {
   State<MarketView> createState() => _MarketViewState();
 }
 
-class _MarketViewState extends State<MarketView> {
+class _MarketViewState extends StatefulBaseState<MarketView, MarketViewModel> {
   final ScrollController _scrollController = ScrollController();
 
   @override

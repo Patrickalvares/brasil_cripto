@@ -32,7 +32,7 @@ void setupInjections() {
   );
 
   // ViewModels
-  i.registerFactory<MarketViewModel>(() => MarketViewModel(i<CoinRepository>()));
+  i.registerFactory<MarketViewModel>(() => MarketViewModel(repository: i<CoinRepository>()));
 
   i.registerFactory<CoinDetailViewModel>(() => CoinDetailViewModel(i<CoinRepository>()));
 
