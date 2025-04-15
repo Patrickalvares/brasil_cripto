@@ -41,5 +41,12 @@
   "volume_24h": "24h Volume",
   "market_rank": "Market Rank",
   "high_24h": "24h High",
-  "low_24h": "24h Low"
+  "low_24h": "24h Low",
+  "day_sun": "Sun",
+  "day_mon": "Mon",
+  "day_tue": "Tue",
+  "day_wed": "Wed",
+  "day_thu": "Thu",
+  "day_fri": "Fri",
+  "day_sat": "Sat"
 }
