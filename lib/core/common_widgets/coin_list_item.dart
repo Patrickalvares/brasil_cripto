@@ -55,11 +55,14 @@ class CoinListItem extends StatelessWidget {
                   Text(
                     coin.name,
                     style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Text(coin.symbol.toUpperCase(), style: textTheme.bodySmall),
                 ],
               ),
             ),
+            const SizedBox(width: 5),
 
             if (showChart && coin.sparklineData != null)
               SizedBox(
@@ -91,30 +94,30 @@ class CoinListItem extends StatelessWidget {
                   ),
                 ),
               ),
-
-            const SizedBox(width: 16),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  coin.currentPrice != null ? formatter.format(coin.currentPrice) : '-',
-                  style: textTheme.titleMedium,
-                ),
-                Text(
-                  coin.priceChangePercentage24h != null
-                      ? '${coin.priceChangePercentage24h! >= 0 ? '+' : ''}${coin.priceChangePercentage24h!.toStringAsFixed(2)}%'
-                      : '-',
-                  style: TextStyle(
-                    color: isPositiveChange ? Colors.green : Colors.red,
-                    fontWeight: FontWeight.bold,
+            const SizedBox(width: 5),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    coin.currentPrice != null ? formatter.format(coin.currentPrice) : '-',
+                    style: textTheme.titleMedium,
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ],
+                  Text(
+                    coin.priceChangePercentage24h != null
+                        ? '${coin.priceChangePercentage24h! >= 0 ? '+' : ''}${coin.priceChangePercentage24h!.toStringAsFixed(2)}%'
+                        : '-',
+                    style: TextStyle(
+                      color: isPositiveChange ? Colors.green : Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
-
             if (onFavoriteToggle != null) ...[
-              const SizedBox(width: 8),
               IconButton(
                 icon: Icon(
                   coin.isFavorite ? Icons.star : Icons.star_border,
