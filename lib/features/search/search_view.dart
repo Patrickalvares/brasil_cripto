@@ -1,3 +1,4 @@
+import 'package:brasil_cripto/utils/state_ful_base_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class SearchView extends StatefulWidget {
   State<SearchView> createState() => _SearchViewState();
 }
 
-class _SearchViewState extends State<SearchView> {
+class _SearchViewState extends StatefulBaseState<SearchView, SearchViewModel> {
   @override
   Widget build(BuildContext context) {
     return Consumer<SearchViewModel>(

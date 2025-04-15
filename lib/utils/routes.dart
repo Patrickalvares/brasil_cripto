@@ -9,7 +9,10 @@ abstract interface class IRoutes {
 }
 
 enum AppRoutes {
-  market(path: '/market');
+  market(path: '/market'),
+  favorites(path: '/favorites'),
+  coinDetail(path: '/coin-detail'),
+  searchState(path: '/search');
 
   const AppRoutes({required this.path});
   final String path;

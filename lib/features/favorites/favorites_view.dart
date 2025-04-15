@@ -1,3 +1,4 @@
+import 'package:brasil_cripto/utils/state_ful_base_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class FavoritesView extends StatefulWidget {
   State<FavoritesView> createState() => _FavoritesViewState();
 }
 
-class _FavoritesViewState extends State<FavoritesView> {
+class _FavoritesViewState extends StatefulBaseState<FavoritesView, FavoritesViewModel> {
   @override
   void initState() {
     super.initState();

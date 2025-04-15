@@ -34,9 +34,11 @@ void setupInjections() {
   // ViewModels
   i.registerFactory<MarketViewModel>(() => MarketViewModel(repository: i<CoinRepository>()));
 
-  i.registerFactory<CoinDetailViewModel>(() => CoinDetailViewModel(i<CoinRepository>()));
+  i.registerFactory<CoinDetailViewModel>(
+    () => CoinDetailViewModel(repository: i<CoinRepository>()),
+  );
 
-  i.registerFactory<FavoritesViewModel>(() => FavoritesViewModel(i<CoinRepository>()));
+  i.registerFactory<FavoritesViewModel>(() => FavoritesViewModel(repository: i<CoinRepository>()));
 
-  i.registerFactory<SearchViewModel>(() => SearchViewModel(i<CoinRepository>()));
+  i.registerFactory<SearchViewModel>(() => SearchViewModel(repository: i<CoinRepository>()));
 }
