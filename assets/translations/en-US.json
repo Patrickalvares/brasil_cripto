@@ -48,5 +48,6 @@
   "day_wed": "Wed",
   "day_thu": "Thu",
   "day_fri": "Fri",
-  "day_sat": "Sat"
+  "day_sat": "Sat",
+  "limit_exceeded_aguarde": "Rate limit exceeded for the API, wait a few moments and try again"
 }

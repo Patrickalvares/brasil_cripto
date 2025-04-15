@@ -1,18 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../constants/api_constants.dart';
 
 class ApiService {
   final Dio _dio;
 
-  ApiService() 
-      : _dio = Dio(BaseOptions(
+  ApiService()
+    : _dio = Dio(
+        BaseOptions(
           baseUrl: ApiConstants.baseUrl,
           connectTimeout: const Duration(seconds: 20),
           receiveTimeout: const Duration(seconds: 20),
           responseType: ResponseType.json,
-        ));
-  
+        ),
+      );
+
   Future<Response> get(String endpoint, {Map<String, dynamic>? queryParams}) async {
     try {
       final response = await _dio.get(endpoint, queryParameters: queryParams);
@@ -21,7 +24,7 @@ class ApiService {
       throw _handleError(e);
     }
   }
-  
+
   Future<Response> post(String endpoint, {dynamic data, Map<String, dynamic>? queryParams}) async {
     try {
       final response = await _dio.post(endpoint, data: data, queryParameters: queryParams);
@@ -30,10 +33,15 @@ class ApiService {
       throw _handleError(e);
     }
   }
-  
+
   Exception _handleError(DioException error) {
     String errorMessage = "An error occurred";
-    
+
+    if (error.response?.statusCode == 429) {
+      errorMessage = "limit_exceeded_aguarde".tr();
+      return Exception(errorMessage);
+    }
+
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -50,7 +58,7 @@ class ApiService {
         errorMessage = "Unexpected error occurred";
         break;
     }
-    
+
     return Exception(errorMessage);
   }
-} 
+}

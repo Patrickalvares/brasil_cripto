@@ -48,5 +48,6 @@
   "day_wed": "Qua",
   "day_thu": "Qui",
   "day_fri": "Sex",
-  "day_sat": "Sáb"
+  "day_sat": "Sáb",
+  "limit_exceeded_aguarde": "Limite de requisições excedido para a API, aguarde alguns instantes e tente novamente"
 }
