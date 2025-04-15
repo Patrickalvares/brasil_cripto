@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CryptoSearchBar extends StatefulWidget {
@@ -37,19 +38,20 @@ class _CryptoSearchBarState extends State<CryptoSearchBar> {
       padding: const EdgeInsets.all(16.0),
       child: SearchBar(
         controller: _controller,
-        hintText: 'Pesquisar criptomoedas...',
+        hintText: 'searchHint'.tr(),
         leading: const Icon(Icons.search),
-        trailing: _controller.text.isNotEmpty
-            ? [
-                IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _controller.clear();
-                    widget.onClear();
-                  },
-                ),
-              ]
-            : null,
+        trailing:
+            _controller.text.isNotEmpty
+                ? [
+                  IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _controller.clear();
+                      widget.onClear();
+                    },
+                  ),
+                ]
+                : null,
         onSubmitted: (value) {
           widget.onSearch(value);
         },
@@ -62,4 +64,4 @@ class _CryptoSearchBarState extends State<CryptoSearchBar> {
       ),
     );
   }
-} 
+}

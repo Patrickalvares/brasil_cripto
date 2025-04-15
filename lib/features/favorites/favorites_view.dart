@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,7 @@ class _FavoritesViewState extends State<FavoritesView> {
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FavoritesViewModel>().carregarFavoritos();
     });
@@ -30,19 +31,18 @@ class _FavoritesViewState extends State<FavoritesView> {
     return Consumer<FavoritesViewModel>(
       builder: (context, viewModel, _) {
         final state = viewModel.state;
-        
-        if (state.status == FavoritesStatus.inicial || 
-            state.status == FavoritesStatus.carregando) {
+
+        if (state.status == FavoritesStatus.inicial || state.status == FavoritesStatus.carregando) {
           return const CoinLoadingIndicator();
         }
-        
+
         if (state.status == FavoritesStatus.erro) {
           return ErrorMessage(
             message: state.mensagemErro,
             onRetry: () => viewModel.carregarFavoritos(),
           );
         }
-        
+
         if (state.status == FavoritesStatus.vazio) {
           return Center(
             child: Column(
@@ -50,13 +50,10 @@ class _FavoritesViewState extends State<FavoritesView> {
               children: [
                 const Icon(Icons.star_border, size: 80, color: Colors.grey),
                 const SizedBox(height: 16),
-                Text(
-                  'Nenhum favorito ainda',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text('noFavorites'.tr(), style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Text(
-                  'Adicione criptomoedas à sua lista de favoritos',
+                  'addFavorites'.tr(),
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -64,13 +61,14 @@ class _FavoritesViewState extends State<FavoritesView> {
             ),
           );
         }
-        
+
         return RefreshIndicator(
           onRefresh: () => viewModel.carregarFavoritos(),
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
             itemCount: state.moedasFavoritas.length,
-            separatorBuilder: (context, index) => const Divider(height: 1, indent: 16, endIndent: 16),
+            separatorBuilder:
+                (context, index) => const Divider(height: 1, indent: 16, endIndent: 16),
             itemBuilder: (context, index) {
               final moeda = state.moedasFavoritas[index];
               return Dismissible(
@@ -87,12 +85,12 @@ class _FavoritesViewState extends State<FavoritesView> {
                 },
                 onDismissed: (direction) {
                   viewModel.removerDosFavoritos(moeda.id);
-                  
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${moeda.name} removida dos favoritos'),
+                      content: Text('removedFrom'.tr(namedArgs: {'name': moeda.name})),
                       action: SnackBarAction(
-                        label: 'DESFAZER',
+                        label: 'undo'.tr(),
                         onPressed: () {
                           viewModel.carregarFavoritos();
                         },
@@ -105,9 +103,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => CoinDetailView(coinId: moeda.id),
-                      ),
+                      MaterialPageRoute(builder: (context) => CoinDetailView(coinId: moeda.id)),
                     ).then((_) => viewModel.carregarFavoritos());
                   },
                   onFavoriteToggle: () {
@@ -121,26 +117,27 @@ class _FavoritesViewState extends State<FavoritesView> {
       },
     );
   }
-  
+
   Future<bool> _showConfirmacaoExclusao(BuildContext context) async {
     return await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Remover dos Favoritos'),
-          content: const Text('Tem certeza que deseja remover esta criptomoeda dos seus favoritos?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('CANCELAR'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('REMOVER'),
-            ),
-          ],
-        );
-      },
-    ) ?? false;
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('removeFavorite'.tr()),
+              content: Text('removeConfirmation'.tr()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('cancel'.tr()),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('remove'.tr()),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 }

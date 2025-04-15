@@ -24,7 +24,7 @@ class CoinListItem extends StatelessWidget {
     final formatter = NumberFormat.currency(symbol: '\$');
     final textTheme = Theme.of(context).textTheme;
     final isPositiveChange = (coin.priceChangePercentage24h ?? 0) >= 0;
-    
+
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -36,17 +36,18 @@ class CoinListItem extends StatelessWidget {
               child: SizedBox(
                 width: 40,
                 height: 40,
-                child: coin.image != null
-                    ? CachedNetworkImage(
-                        imageUrl: coin.image!,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
-                      )
-                    : const Icon(Icons.monetization_on),
+                child:
+                    coin.image != null
+                        ? CachedNetworkImage(
+                          imageUrl: coin.image!,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        )
+                        : const Icon(Icons.monetization_on),
               ),
             ),
             const SizedBox(width: 16),
-            
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,14 +56,11 @@ class CoinListItem extends StatelessWidget {
                     coin.name,
                     style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    coin.symbol.toUpperCase(),
-                    style: textTheme.bodySmall,
-                  ),
+                  Text(coin.symbol.toUpperCase(), style: textTheme.bodySmall),
                 ],
               ),
             ),
-            
+
             if (showChart && coin.sparklineData != null)
               SizedBox(
                 width: 60,
@@ -82,9 +80,10 @@ class CoinListItem extends StatelessWidget {
                         dotData: const FlDotData(show: false),
                         belowBarData: BarAreaData(
                           show: true,
-                          color: isPositiveChange
-                              ? Colors.green.withValues(alpha:  0.2)
-                              : Colors.red.withValues(alpha:  0.2), 
+                          color:
+                              isPositiveChange
+                                  ? Colors.green.withValues(alpha: 0.2)
+                                  : Colors.red.withValues(alpha: 0.2),
                         ),
                       ),
                     ],
@@ -92,16 +91,14 @@ class CoinListItem extends StatelessWidget {
                   ),
                 ),
               ),
-            
+
             const SizedBox(width: 16),
-            
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  coin.currentPrice != null
-                      ? formatter.format(coin.currentPrice)
-                      : '-',
+                  coin.currentPrice != null ? formatter.format(coin.currentPrice) : '-',
                   style: textTheme.titleMedium,
                 ),
                 Text(
@@ -115,7 +112,7 @@ class CoinListItem extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             if (onFavoriteToggle != null) ...[
               const SizedBox(width: 8),
               IconButton(
@@ -131,7 +128,7 @@ class CoinListItem extends StatelessWidget {
       ),
     );
   }
-  
+
   List<FlSpot> _createSpots(List<double> data) {
     final spots = <FlSpot>[];
     for (var i = 0; i < data.length; i++) {
@@ -139,4 +136,4 @@ class CoinListItem extends StatelessWidget {
     }
     return spots;
   }
-} 
+}

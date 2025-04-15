@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,7 @@ class _SearchViewState extends State<SearchView> {
     return Consumer<SearchViewModel>(
       builder: (context, viewModel, _) {
         final state = viewModel.state;
-        
+
         return Column(
           children: [
             CryptoSearchBar(
@@ -34,15 +35,13 @@ class _SearchViewState extends State<SearchView> {
                 viewModel.limparPesquisa();
               },
             ),
-            Expanded(
-              child: _buildResultadosPesquisa(viewModel, state),
-            ),
+            Expanded(child: _buildResultadosPesquisa(viewModel, state)),
           ],
         );
       },
     );
   }
-  
+
   Widget _buildResultadosPesquisa(SearchViewModel viewModel, SearchState state) {
     switch (state.status) {
       case SearchStatus.inicial:
@@ -52,23 +51,19 @@ class _SearchViewState extends State<SearchView> {
             children: [
               const Icon(Icons.search, size: 80, color: Colors.grey),
               const SizedBox(height: 16),
-              Text(
-                'Pesquisar criptomoedas',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text('searchCryptos'.tr(), style: Theme.of(context).textTheme.titleMedium),
             ],
           ),
         );
-        
+
       case SearchStatus.pesquisando:
         return const CoinLoadingIndicator(itemCount: 5);
-        
+
       case SearchStatus.sucesso:
         return ListView.separated(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: state.resultados.length,
-          separatorBuilder: (context, index) => 
-              const Divider(height: 1, indent: 16, endIndent: 16),
+          separatorBuilder: (context, index) => const Divider(height: 1, indent: 16, endIndent: 16),
           itemBuilder: (context, index) {
             final moeda = state.resultados[index];
             return CoinListItem(
@@ -77,9 +72,7 @@ class _SearchViewState extends State<SearchView> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => CoinDetailView(coinId: moeda.id),
-                  ),
+                  MaterialPageRoute(builder: (context) => CoinDetailView(coinId: moeda.id)),
                 );
               },
               onFavoriteToggle: () {
@@ -88,7 +81,7 @@ class _SearchViewState extends State<SearchView> {
             );
           },
         );
-        
+
       case SearchStatus.vazio:
         return Center(
           child: Column(
@@ -96,19 +89,13 @@ class _SearchViewState extends State<SearchView> {
             children: [
               const Icon(Icons.search_off, size: 80, color: Colors.grey),
               const SizedBox(height: 16),
-              Text(
-                'Nenhuma criptomoeda encontrada',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text('noResults'.tr(), style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
-              Text(
-                'Tente um termo de pesquisa diferente',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              Text('tryDifferentSearch'.tr(), style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         );
-        
+
       case SearchStatus.erro:
         return ErrorMessage(
           message: state.mensagemErro,
@@ -120,4 +107,4 @@ class _SearchViewState extends State<SearchView> {
         );
     }
   }
-} 
+}

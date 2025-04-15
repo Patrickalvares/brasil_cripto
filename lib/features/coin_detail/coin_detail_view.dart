@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/common_widgets/error_message.dart';
@@ -21,7 +21,7 @@ class _CoinDetailViewState extends State<CoinDetailView> {
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CoinDetailViewModel>().carregarDetalhesMoeda(widget.coinId);
     });
@@ -31,12 +31,12 @@ class _CoinDetailViewState extends State<CoinDetailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalhes da Moeda'),
+        title: Text('coin_details'.tr()),
         actions: [
           Consumer<CoinDetailViewModel>(
             builder: (context, viewModel, _) {
               final state = viewModel.state;
-              
+
               if (state.status == DetailStatus.carregado) {
                 return IconButton(
                   icon: Icon(
@@ -56,21 +56,20 @@ class _CoinDetailViewState extends State<CoinDetailView> {
       body: Consumer<CoinDetailViewModel>(
         builder: (context, viewModel, _) {
           final state = viewModel.state;
-          
-          if (state.status == DetailStatus.inicial || 
-              state.status == DetailStatus.carregando) {
+
+          if (state.status == DetailStatus.inicial || state.status == DetailStatus.carregando) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (state.status == DetailStatus.erro) {
             return ErrorMessage(
               message: state.mensagemErro,
               onRetry: () => viewModel.carregarDetalhesMoeda(widget.coinId),
             );
           }
-          
+
           final moeda = state.detalheMoeda!;
-          
+
           return RefreshIndicator(
             onRefresh: () => viewModel.carregarDetalhesMoeda(widget.coinId),
             child: SingleChildScrollView(
@@ -102,40 +101,40 @@ class _CoinDetailViewState extends State<CoinDetailView> {
                             children: [
                               Text(
                                 moeda.name,
-                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 moeda.symbol.toUpperCase(),
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.grey,
-                                ),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.titleMedium?.copyWith(color: Colors.grey),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     _buildPriceInfo(context, moeda),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     if (moeda.sparklineData != null && moeda.sparklineData!.isNotEmpty)
                       _buildPriceChart(context, moeda),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     _buildMarketStats(context, moeda),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     if (moeda.description != null && moeda.description!.isNotEmpty) ...[
                       Text(
-                        'Sobre ${moeda.name}',
+                        'about_coin'.tr(namedArgs: {'name': moeda.name}),
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 8),
@@ -153,11 +152,11 @@ class _CoinDetailViewState extends State<CoinDetailView> {
       ),
     );
   }
-  
+
   Widget _buildPriceInfo(BuildContext context, moeda) {
     final formatter = NumberFormat.currency(symbol: '\$');
     final isPositiveChange = (moeda.priceChangePercentage24h ?? 0) >= 0;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -167,16 +166,16 @@ class _CoinDetailViewState extends State<CoinDetailView> {
           children: [
             Text(
               moeda.currentPrice != null ? formatter.format(moeda.currentPrice) : '-',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(width: 8),
             if (moeda.priceChangePercentage24h != null)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isPositiveChange ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
+                  color: isPositiveChange ? Colors.green.withAlpha(26) : Colors.red.withAlpha(26),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -191,26 +190,21 @@ class _CoinDetailViewState extends State<CoinDetailView> {
         ),
         const SizedBox(height: 4),
         Text(
-          'Variação 24h',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey,
-          ),
+          'price_change_24h'.tr(),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
       ],
     );
   }
-  
+
   Widget _buildPriceChart(BuildContext context, moeda) {
     final isPositiveChange = (moeda.priceChangePercentage24h ?? 0) >= 0;
     final formatter = NumberFormat.currency(symbol: '\$');
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Gráfico de Preço (7 dias)',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        Text('price_chart_7d'.tr(), style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 16),
         SizedBox(
           height: 200,
@@ -220,43 +214,19 @@ class _CoinDetailViewState extends State<CoinDetailView> {
                 show: true,
                 drawVerticalLine: true,
                 getDrawingHorizontalLine: (value) {
-                  return FlLine(
-                    color: Colors.grey.withValues(alpha: 0.2), 
-                    strokeWidth: 1,
-                  );
+                  return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
                 },
                 getDrawingVerticalLine: (value) {
-                  return FlLine(
-                    color: Colors.grey.withValues(alpha: 0.2), 
-                    strokeWidth: 1,
-                  );
+                  return FlLine(color: Colors.grey.withAlpha(51), strokeWidth: 1);
                 },
               ),
               titlesData: FlTitlesData(
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: false,
-                  ),
-                ),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: false,
-                  ),
-                ),
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: false,
-                  ),
-                ),
-                topTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: false,
-                  ),
-                ),
+                bottomTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
-              borderData: FlBorderData(
-                show: false,
-              ),
+              borderData: FlBorderData(show: false),
               lineBarsData: [
                 LineChartBarData(
                   spots: _createSpots(moeda.sparklineData!),
@@ -264,14 +234,10 @@ class _CoinDetailViewState extends State<CoinDetailView> {
                   color: isPositiveChange ? Colors.green : Colors.red,
                   barWidth: 3,
                   isStrokeCapRound: true,
-                  dotData: const FlDotData(
-                    show: false,
-                  ),
+                  dotData: const FlDotData(show: false),
                   belowBarData: BarAreaData(
                     show: true,
-                    color: isPositiveChange 
-                        ? Colors.green.withValues(alpha: 0.1) 
-                        : Colors.red.withValues(alpha: 0.1),
+                    color: isPositiveChange ? Colors.green.withAlpha(26) : Colors.red.withAlpha(26),
                   ),
                 ),
               ],
@@ -288,7 +254,7 @@ class _CoinDetailViewState extends State<CoinDetailView> {
                         ),
                       );
                     }).toList();
-                  }
+                  },
                 ),
               ),
             ),
@@ -297,80 +263,60 @@ class _CoinDetailViewState extends State<CoinDetailView> {
       ],
     );
   }
-  
+
   Widget _buildMarketStats(BuildContext context, moeda) {
     final formatter = NumberFormat.currency(symbol: '\$');
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Estatísticas de Mercado',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        Text('market_stats'.tr(), style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 16),
         _buildStatRow(
           context,
-          'Capitalização de Mercado',
-          moeda.marketCap != null 
-              ? formatter.format(moeda.marketCap)
-              : '-',
+          'market_cap'.tr(),
+          moeda.marketCap != null ? formatter.format(moeda.marketCap) : '-',
         ),
         _buildStatRow(
           context,
-          'Volume 24h',
-          moeda.totalVolume != null 
-              ? formatter.format(moeda.totalVolume)
-              : '-',
+          'volume_24h'.tr(),
+          moeda.totalVolume != null ? formatter.format(moeda.totalVolume) : '-',
         ),
         _buildStatRow(
           context,
-          'Posição no Mercado',
-          moeda.marketCapRank != null 
-              ? '#${moeda.marketCapRank}'
-              : '-',
+          'market_rank'.tr(),
+          moeda.marketCapRank != null ? '#${moeda.marketCapRank}' : '-',
         ),
         _buildStatRow(
           context,
-          'Máxima 24h',
-          moeda.high24h != null 
-              ? formatter.format(moeda.high24h)
-              : '-',
+          'high_24h'.tr(),
+          moeda.high24h != null ? formatter.format(moeda.high24h) : '-',
         ),
         _buildStatRow(
           context,
-          'Mínima 24h',
-          moeda.low24h != null 
-              ? formatter.format(moeda.low24h)
-              : '-',
+          'low_24h'.tr(),
+          moeda.low24h != null ? formatter.format(moeda.low24h) : '-',
         ),
       ],
     );
   }
-  
+
   Widget _buildStatRow(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
-          ),
+          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey)),
           Text(
             value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),
     );
   }
-  
+
   List<FlSpot> _createSpots(List<double> data) {
     final spots = <FlSpot>[];
     for (var i = 0; i < data.length; i++) {
@@ -378,13 +324,13 @@ class _CoinDetailViewState extends State<CoinDetailView> {
     }
     return spots;
   }
-  
+
   String _cleanDescription(String description) {
     return description
-      .replaceAll(RegExp(r'<[^>]*>'), '')
-      .replaceAll('&nbsp;', ' ')
-      .replaceAll('&amp;', '&')
-      .replaceAll('&lt;', '<')
-      .replaceAll('&gt;', '>');
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>');
   }
-} 
+}

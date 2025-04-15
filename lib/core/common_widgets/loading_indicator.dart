@@ -4,10 +4,7 @@ import 'package:shimmer/shimmer.dart';
 class CoinLoadingIndicator extends StatelessWidget {
   final int itemCount;
 
-  const CoinLoadingIndicator({
-    super.key,
-    this.itemCount = 10,
-  });
+  const CoinLoadingIndicator({super.key, this.itemCount = 10});
 
   @override
   Widget build(BuildContext context) {
@@ -38,55 +35,35 @@ class CoinLoadingIndicator extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 100,
-                    height: 14,
-                    color: Colors.white,
-                  ),
+                  Container(width: 100, height: 14, color: Colors.white),
                   const SizedBox(height: 4),
-                  Container(
-                    width: 60,
-                    height: 12,
-                    color: Colors.white,
-                  ),
+                  Container(width: 60, height: 12, color: Colors.white),
                 ],
               ),
             ),
-            
-            Container(
-              width: 60,
-              height: 30,
-              color: Colors.white,
-            ),
-            
+
+            Container(width: 60, height: 30, color: Colors.white),
+
             const SizedBox(width: 16),
-            
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  width: 70,
-                  height: 14,
-                  color: Colors.white,
-                ),
+                Container(width: 70, height: 14, color: Colors.white),
                 const SizedBox(height: 4),
-                Container(
-                  width: 40,
-                  height: 12,
-                  color: Colors.white,
-                ),
+                Container(width: 40, height: 12, color: Colors.white),
               ],
             ),
-            
+
             const SizedBox(width: 24),
           ],
         ),
       ),
     );
   }
-} 
+}
