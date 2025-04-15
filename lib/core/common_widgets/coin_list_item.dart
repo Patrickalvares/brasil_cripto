@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import '../../domain/entities/coin.dart';
@@ -28,14 +29,14 @@ class CoinListItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 12.w, bottom: 12.w),
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
               child: SizedBox(
-                width: 40,
-                height: 40,
+                width: 40.w,
+                height: 40.h,
                 child:
                     coin.image != null
                         ? CachedNetworkImage(
@@ -43,10 +44,10 @@ class CoinListItem extends StatelessWidget {
                           placeholder: (context, url) => const CircularProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         )
-                        : const Icon(Icons.monetization_on),
+                        : Icon(Icons.monetization_on, size: 24.sp),
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16.w),
 
             Expanded(
               child: Column(
@@ -54,20 +55,25 @@ class CoinListItem extends StatelessWidget {
                 children: [
                   Text(
                     coin.name,
-                    style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(coin.symbol.toUpperCase(), style: textTheme.bodySmall),
+                  Text(
+                    coin.symbol.toUpperCase(),
+                    style: textTheme.bodySmall?.copyWith(fontSize: 12.sp),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(width: 5),
 
             if (showChart && coin.sparklineData != null)
               SizedBox(
-                width: 60,
-                height: 30,
+                width: 60.w,
+                height: 30.h,
                 child: LineChart(
                   LineChartData(
                     gridData: const FlGridData(show: false),
@@ -78,7 +84,7 @@ class CoinListItem extends StatelessWidget {
                         spots: _createSpots(coin.sparklineData!),
                         isCurved: true,
                         color: isPositiveChange ? Colors.green : Colors.red,
-                        barWidth: 2,
+                        barWidth: 2.w,
                         isStrokeCapRound: true,
                         dotData: const FlDotData(show: false),
                         belowBarData: BarAreaData(
@@ -94,14 +100,14 @@ class CoinListItem extends StatelessWidget {
                   ),
                 ),
               ),
-            const SizedBox(width: 5),
+            SizedBox(width: 10.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     coin.currentPrice != null ? formatter.format(coin.currentPrice) : '-',
-                    style: textTheme.titleMedium,
+                    style: textTheme.titleMedium?.copyWith(fontSize: 13.sp),
                     textAlign: TextAlign.center,
                   ),
                   Text(
@@ -111,6 +117,7 @@ class CoinListItem extends StatelessWidget {
                     style: TextStyle(
                       color: isPositiveChange ? Colors.green : Colors.red,
                       fontWeight: FontWeight.bold,
+                      fontSize: 13.sp,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -118,12 +125,14 @@ class CoinListItem extends StatelessWidget {
               ),
             ),
             if (onFavoriteToggle != null) ...[
-              IconButton(
-                icon: Icon(
+              SizedBox(width: 8.w),
+              GestureDetector(
+                onTap: onFavoriteToggle,
+                child: Icon(
                   coin.isFavorite ? Icons.star : Icons.star_border,
                   color: coin.isFavorite ? Colors.amber : Colors.grey,
+                  size: 26.sp,
                 ),
-                onPressed: onFavoriteToggle,
               ),
             ],
           ],

@@ -20,8 +20,8 @@ class CoinLoadingIndicator extends StatelessWidget {
 
   Widget _buildShimmerItem(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: Colors.grey.shade600,
+      highlightColor: Colors.grey.shade400,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
