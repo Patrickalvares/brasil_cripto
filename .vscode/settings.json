@@ -1,0 +1,19 @@
+{
+    "[dart]": {
+      "editor.defaultFormatter": "Dart-Code.dart-code",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+      },
+      "editor.rulers": []
+    },
+    "dart.lineLength": 100,
+    "editor.guides.indentation": true,
+    "editor.guides.highlightActiveIndentation": true,
+    "dart.previewFlutterUiGuides": true,
+    "dart.previewFlutterUiGuidesCustomTracking": true,
+    "workbench.tree.renderIndentGuides": "always",
+    "debug.toolBarLocation": "commandCenter"
+  }
+  
