@@ -1,4 +1,5 @@
 import 'package:brasil_cripto/core/common_widgets/loading_indicator.dart';
+import 'package:brasil_cripto/core/common_widgets/search_bar_widget.dart';
 import 'package:brasil_cripto/utils/state_ful_base_state.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,11 @@ class _SearchViewState extends StatefulBaseState<SearchView, SearchViewModel> {
 
         return Column(
           children: [
-            SearchBarContainer(initialQuery: ultimaConsulta, viewModel: viewModel),
+            CryptoSearchBar(
+              initialQuery: ultimaConsulta,
+              onSearch: (query) => viewModel.pesquisarMoedas(query),
+              onClear: () => viewModel.limparPesquisa(),
+            ),
             Expanded(child: _buildResultadosPesquisa(state)),
           ],
         );
