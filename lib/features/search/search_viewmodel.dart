@@ -5,9 +5,9 @@ import '../../domain/repositories/coin_repository.dart';
 import 'search_state.dart';
 
 class SearchViewModel extends BaseNotifier<SearchState> {
-  final CoinRepository _repository;
+  final ICoinRepository _repository;
 
-  SearchViewModel({required CoinRepository repository})
+  SearchViewModel({required ICoinRepository repository})
     : _repository = repository,
       super(SearchInitialState());
 

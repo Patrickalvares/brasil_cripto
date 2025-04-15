@@ -4,9 +4,9 @@ import '../../domain/repositories/coin_repository.dart';
 import 'favorites_state.dart';
 
 class FavoritesViewModel extends BaseNotifier<FavoritesState> {
-  final CoinRepository _repository;
+  final ICoinRepository _repository;
 
-  FavoritesViewModel({required CoinRepository repository})
+  FavoritesViewModel({required ICoinRepository repository})
     : _repository = repository,
       super(FavoritesInitialState());
 

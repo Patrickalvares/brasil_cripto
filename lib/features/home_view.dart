@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/common_widgets/base_scaffold.dart';
-import '../favorites/favorites_view.dart';
-import '../market/market_view.dart';
-import '../search/search_view.dart';
+import '../core/common_widgets/base_scaffold.dart';
+import 'favorites/favorites_view.dart';
+import 'market/market_view.dart';
+import 'search/search_view.dart';
 
 class HomeView extends StatefulWidget {
   final int? initialIndex;

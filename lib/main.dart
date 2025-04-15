@@ -5,7 +5,7 @@ import 'core/common_widgets/app_listenable_builder.dart';
 import 'core/services/injections.dart';
 import 'core/services/locale_provider.dart';
 import 'core/services/theme_provider.dart';
-import 'features/home/home_view.dart';
+import 'features/home_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

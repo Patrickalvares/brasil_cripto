@@ -4,8 +4,8 @@ import '../../domain/entities/coin_detail.dart';
 import '../../domain/repositories/coin_repository.dart';
 import '../datasources/coin_data_source.dart';
 
-class CoinRepositoryImpl implements CoinRepository {
-  final CoinDataSource _dataSource;
+class CoinRepositoryImpl implements ICoinRepository {
+  final ICoinDataSource _dataSource;
   final StorageService _storageService;
 
   CoinRepositoryImpl(this._dataSource, this._storageService);
@@ -23,7 +23,7 @@ class CoinRepositoryImpl implements CoinRepository {
       perPage: perPage,
       sparkline: sparkline,
     );
-    
+
     final favoriteIds = await _storageService.getFavoriteCoins();
     return coins.map((coin) {
       if (favoriteIds.contains(coin.id)) {
@@ -36,7 +36,7 @@ class CoinRepositoryImpl implements CoinRepository {
   @override
   Future<List<Coin>> searchCoins(String query) async {
     final coins = await _dataSource.searchCoins(query);
-    
+
     final favoriteIds = await _storageService.getFavoriteCoins();
     return coins.map((coin) {
       if (favoriteIds.contains(coin.id)) {
@@ -49,7 +49,7 @@ class CoinRepositoryImpl implements CoinRepository {
   @override
   Future<CoinDetail> getCoinDetail(String id) async {
     final coinDetail = await _dataSource.getCoinDetail(id);
-    
+
     final isFavorite = await _storageService.isFavoriteCoin(id);
     return coinDetail.copyWith(isFavorite: isFavorite);
   }
@@ -72,13 +72,13 @@ class CoinRepositoryImpl implements CoinRepository {
   @override
   Future<List<Coin>> getFavoriteCoins() async {
     final favoriteIds = await _storageService.getFavoriteCoins();
-    
+
     if (favoriteIds.isEmpty) {
       return [];
     }
-    
+
     List<Coin> favoriteCoins = [];
-    
+
     for (var id in favoriteIds) {
       try {
         final coin = await _dataSource.getCoinDetail(id);
@@ -87,7 +87,7 @@ class CoinRepositoryImpl implements CoinRepository {
         continue;
       }
     }
-    
+
     return favoriteCoins;
   }
 }

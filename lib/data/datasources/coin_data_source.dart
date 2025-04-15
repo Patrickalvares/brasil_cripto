@@ -3,7 +3,7 @@ import '../../core/services/api_service.dart';
 import '../models/coin_detail_model.dart';
 import '../models/coin_model.dart';
 
-abstract class CoinDataSource {
+abstract class ICoinDataSource {
   Future<List<CoinModel>> getCoins({
     String currency = 'usd',
     int page = 1,
@@ -16,7 +16,7 @@ abstract class CoinDataSource {
   Future<CoinDetailModel> getCoinDetail(String id);
 }
 
-class CoinDataSourceImpl implements CoinDataSource {
+class CoinDataSourceImpl implements ICoinDataSource {
   final ApiService _apiService;
 
   CoinDataSourceImpl(this._apiService);

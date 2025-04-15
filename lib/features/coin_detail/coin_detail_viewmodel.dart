@@ -6,9 +6,9 @@ import '../../domain/repositories/coin_repository.dart';
 import 'coin_detail_state.dart';
 
 class CoinDetailViewModel extends BaseNotifier<CoinDetailState> {
-  final CoinRepository _repository;
+  final ICoinRepository _repository;
 
-  CoinDetailViewModel({required CoinRepository repository})
+  CoinDetailViewModel({required ICoinRepository repository})
     : _repository = repository,
       super(CoinDetailInitialState());
 

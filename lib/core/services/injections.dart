@@ -24,21 +24,21 @@ void setupInjections() {
   i.registerLazySingleton<LocaleProvider>(() => LocaleProvider());
 
   // Data sources
-  i.registerLazySingleton<CoinDataSource>(() => CoinDataSourceImpl(i<ApiService>()));
+  i.registerLazySingleton<ICoinDataSource>(() => CoinDataSourceImpl(i<ApiService>()));
 
   // Repositories
-  i.registerLazySingleton<CoinRepository>(
-    () => CoinRepositoryImpl(i<CoinDataSource>(), i<StorageService>()),
+  i.registerLazySingleton<ICoinRepository>(
+    () => CoinRepositoryImpl(i<ICoinDataSource>(), i<StorageService>()),
   );
 
   // ViewModels
-  i.registerFactory<MarketViewModel>(() => MarketViewModel(repository: i<CoinRepository>()));
+  i.registerFactory<MarketViewModel>(() => MarketViewModel(repository: i<ICoinRepository>()));
 
   i.registerFactory<CoinDetailViewModel>(
-    () => CoinDetailViewModel(repository: i<CoinRepository>()),
+    () => CoinDetailViewModel(repository: i<ICoinRepository>()),
   );
 
-  i.registerFactory<FavoritesViewModel>(() => FavoritesViewModel(repository: i<CoinRepository>()));
+  i.registerFactory<FavoritesViewModel>(() => FavoritesViewModel(repository: i<ICoinRepository>()));
 
-  i.registerFactory<SearchViewModel>(() => SearchViewModel(repository: i<CoinRepository>()));
+  i.registerFactory<SearchViewModel>(() => SearchViewModel(repository: i<ICoinRepository>()));
 }

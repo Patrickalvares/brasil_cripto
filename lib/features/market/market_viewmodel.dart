@@ -5,9 +5,9 @@ import '../../domain/repositories/coin_repository.dart';
 import 'market_state.dart';
 
 class MarketViewModel extends BaseNotifier<MarketState> {
-  final CoinRepository _repository;
+  final ICoinRepository _repository;
 
-  MarketViewModel({required CoinRepository repository})
+  MarketViewModel({required ICoinRepository repository})
     : _repository = repository,
       super(MarketInitialState());
 
