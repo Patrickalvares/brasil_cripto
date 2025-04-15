@@ -62,14 +62,16 @@ class MyApp extends StatelessWidget {
               locale: context.locale,
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.deepPurple,
+                  seedColor: const Color(0xFF1E8E3E),
+                  secondary: const Color(0xFFFFD700),
                   brightness: Brightness.light,
                 ),
                 useMaterial3: true,
               ),
               darkTheme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.deepPurple,
+                  seedColor: const Color(0xFF1E8E3E),
+                  secondary: const Color(0xFFFFD700),
                   brightness: Brightness.dark,
                 ),
                 useMaterial3: true,
