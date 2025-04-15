@@ -1,9 +1,11 @@
+import 'package:brasil_cripto/core/constants/api_constants.dart';
+
 import '../entities/coin.dart';
 import '../entities/coin_detail.dart';
 
 abstract class ICoinRepository {
   Future<List<Coin>> getCoins({
-    String currency = 'usd',
+    String currency = ApiConstants.defaultCurrency,
     int page = 1,
     int perPage = 20,
     bool sparkline = false,

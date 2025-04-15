@@ -10,6 +10,7 @@ import '../../features/market/market_viewmodel.dart';
 import '../../features/search/search_viewmodel.dart';
 import 'api_service.dart';
 import 'cache_service.dart';
+import 'currency_provider.dart';
 import 'locale_provider.dart';
 import 'storage_service.dart';
 import 'theme_provider.dart';
@@ -25,6 +26,7 @@ void setupInjections() {
   // Providers
   i.registerLazySingleton<ThemeProvider>(() => ThemeProvider());
   i.registerLazySingleton<LocaleProvider>(() => LocaleProvider());
+  i.registerLazySingleton<CurrencyProvider>(() => CurrencyProvider());
 
   // Data sources
   i.registerLazySingleton<ICoinDataSource>(() => CoinDataSourceImpl(i<ApiService>()));

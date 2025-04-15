@@ -2,15 +2,34 @@ import 'dart:math';
 
 import 'package:brasil_cripto/utils/base_notifier.dart';
 
+import '../../core/services/currency_provider.dart';
+import '../../core/services/injections.dart';
 import '../../domain/repositories/coin_repository.dart';
 import 'coin_detail_state.dart';
 
 class CoinDetailViewModel extends BaseNotifier<CoinDetailState> {
   final ICoinRepository _repository;
+  final CurrencyProvider _currencyProvider;
 
   CoinDetailViewModel({required ICoinRepository repository})
     : _repository = repository,
-      super(CoinDetailInitialState());
+      _currencyProvider = i<CurrencyProvider>(),
+      super(CoinDetailInitialState()) {
+    _currencyProvider.addListener(_onCurrencyChanged);
+  }
+
+  @override
+  void dispose() {
+    _currencyProvider.removeListener(_onCurrencyChanged);
+    super.dispose();
+  }
+
+  void _onCurrencyChanged() {
+    final state = currentState;
+    if (state is CoinDetailLoadedState && state.detalheMoeda != null) {
+      carregarDetalhesMoeda(state.detalheMoeda!.id);
+    }
+  }
 
   Future<void> carregarDetalhesMoeda(String id) async {
     emit(CoinDetailLoadingState());
@@ -60,4 +79,6 @@ class CoinDetailViewModel extends BaseNotifier<CoinDetailState> {
       emit(CoinDetailErrorState(mensagemErro: e.toString()));
     }
   }
+
+  String get currencySymbol => _currencyProvider.currencySymbol;
 }

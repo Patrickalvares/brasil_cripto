@@ -14,7 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   dio: ^5.4.0
   get_it: ^7.6.7
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.5.3
   fl_chart: ^0.66.2
   shimmer: ^3.0.0
   cached_network_image: ^3.3.1

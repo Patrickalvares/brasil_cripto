@@ -1,3 +1,5 @@
+import 'package:brasil_cripto/core/constants/api_constants.dart';
+
 import '../../core/services/storage_service.dart';
 import '../../domain/entities/coin.dart';
 import '../../domain/entities/coin_detail.dart';
@@ -12,7 +14,7 @@ class CoinRepositoryImpl implements ICoinRepository {
 
   @override
   Future<List<Coin>> getCoins({
-    String currency = 'usd',
+    String currency = ApiConstants.defaultCurrency,
     int page = 1,
     int perPage = 20,
     bool sparkline = false,

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../services/currency_provider.dart';
 import '../services/injections.dart';
 import '../services/locale_provider.dart';
 import '../services/theme_provider.dart';
@@ -29,12 +30,13 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = i<ThemeProvider>();
     final localeProvider = i<LocaleProvider>();
+    final currencyProvider = i<CurrencyProvider>();
 
     return Drawer(
       child: Column(
         children: [
           _buildDrawerHeader(context),
-          _buildDrawerBody(context, themeProvider, localeProvider),
+          _buildDrawerBody(context, themeProvider, localeProvider, currencyProvider),
         ],
       ),
     );
@@ -79,33 +81,13 @@ class AppDrawer extends StatelessWidget {
     BuildContext context,
     ThemeProvider themeProvider,
     LocaleProvider localeProvider,
+    CurrencyProvider currencyProvider,
   ) {
     return Expanded(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          _buildNavigationTile(
-            context: context,
-            icon: Icons.attach_money,
-            title: 'market'.tr(),
-            isSelected: selectedOption == 'market'.tr(),
-            onTap: () => _navigateToScreen(context, 0),
-          ),
-          _buildNavigationTile(
-            context: context,
-            icon: Icons.search,
-            title: 'search'.tr(),
-            isSelected: selectedOption == 'search'.tr(),
-            onTap: () => _navigateToScreen(context, 1),
-          ),
-          _buildNavigationTile(
-            context: context,
-            icon: Icons.star,
-            title: 'favorites'.tr(),
-            isSelected: selectedOption == 'favorites'.tr(),
-            onTap: () => _navigateToScreen(context, 2),
-          ),
-          const Divider(),
+          _buildCurrencySwitcher(context, currencyProvider),
           _buildThemeSwitcher(context, themeProvider),
           _buildLanguageSwitcher(context, localeProvider),
           _buildNavigationTile(
@@ -117,6 +99,50 @@ class AppDrawer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCurrencySwitcher(BuildContext context, CurrencyProvider currencyProvider) {
+    return ValueListenableBuilder(
+      valueListenable: currencyProvider,
+      builder: (_, __, ___) {
+        return ExpansionTile(
+          leading: const Icon(Icons.attach_money),
+          title: Text('Moeda Base'),
+          children: [
+            RadioListTile<String>(
+              title: const Text('Real Brasileiro (R\$)'),
+              value: 'brl',
+              groupValue: currencyProvider.currency,
+              onChanged: (String? currency) {
+                if (currency != null) {
+                  currencyProvider.setCurrency(currency);
+                }
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Dólar Americano (\$)'),
+              value: 'usd',
+              groupValue: currencyProvider.currency,
+              onChanged: (String? currency) {
+                if (currency != null) {
+                  currencyProvider.setCurrency(currency);
+                }
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Euro (€)'),
+              value: 'eur',
+              groupValue: currencyProvider.currency,
+              onChanged: (String? currency) {
+                if (currency != null) {
+                  currencyProvider.setCurrency(currency);
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

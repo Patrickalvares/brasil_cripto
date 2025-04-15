@@ -1,15 +1,31 @@
 import 'package:brasil_cripto/utils/base_notifier.dart';
 
+import '../../core/services/currency_provider.dart';
+import '../../core/services/injections.dart';
 import '../../domain/entities/coin.dart';
 import '../../domain/repositories/coin_repository.dart';
 import 'market_state.dart';
 
 class MarketViewModel extends BaseNotifier<MarketState> {
   final ICoinRepository _repository;
+  final CurrencyProvider _currencyProvider;
 
   MarketViewModel({required ICoinRepository repository})
     : _repository = repository,
-      super(MarketInitialState());
+      _currencyProvider = i<CurrencyProvider>(),
+      super(MarketInitialState()) {
+    _currencyProvider.addListener(_onCurrencyChanged);
+  }
+
+  @override
+  void dispose() {
+    _currencyProvider.removeListener(_onCurrencyChanged);
+    super.dispose();
+  }
+
+  void _onCurrencyChanged() {
+    atualizarMoedas();
+  }
 
   Future<void> carregarMoedas({bool atualizar = false}) async {
     if (currentState is MarketLoadingState && !atualizar) {
@@ -19,7 +35,12 @@ class MarketViewModel extends BaseNotifier<MarketState> {
     emit(MarketLoadingState(moedas: []));
 
     try {
-      final moedas = await _repository.getCoins(page: 1, perPage: 20, sparkline: true);
+      final moedas = await _repository.getCoins(
+        currency: _currencyProvider.currency,
+        page: 1,
+        perPage: 20,
+        sparkline: true,
+      );
 
       emit(MarketLoadedState(moedas: moedas));
     } catch (e) {
