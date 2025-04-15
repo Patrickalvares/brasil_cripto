@@ -7,48 +7,92 @@ import 'market_state.dart';
 class MarketViewModel extends BaseNotifier<MarketState> {
   final CoinRepository _repository;
 
-  MarketState _state = const MarketState();
-
   MarketViewModel({required CoinRepository repository})
     : _repository = repository,
-      super(const MarketState());
-
-  MarketState get state => _state;
+      super(MarketInitialState());
 
   Future<void> carregarMoedas({bool atualizar = false}) async {
-    if (atualizar) {
-      _state = _state.copyWith(moedas: [], paginaAtual: 1, temMaisDados: true);
-    }
+    final state = currentState;
 
-    if (_state.status == MarketStatus.carregando || (!_state.temMaisDados && !atualizar)) {
+    if (atualizar) {
+      emit(MarketLoadingState(moedas: [], paginaAtual: 1, temMaisDados: true));
+
+      try {
+        final novasMoedas = await _repository.getCoins(page: 1, perPage: 20, sparkline: true);
+
+        if (novasMoedas.isEmpty) {
+          emit(MarketLoadedState(moedas: [], paginaAtual: 1, temMaisDados: false));
+        } else {
+          emit(MarketLoadedState(moedas: novasMoedas, paginaAtual: 2, temMaisDados: true));
+        }
+      } catch (e) {
+        emit(
+          MarketErrorState(
+            moedas: [],
+            mensagemErro: e.toString(),
+            paginaAtual: 1,
+            temMaisDados: true,
+          ),
+        );
+      }
       return;
     }
 
-    _state = _state.copyWith(status: MarketStatus.carregando);
-    notifyListeners();
+    if (state is MarketLoadingState) {
+      return;
+    }
+
+    if (state is MarketLoadedState && !state.temMaisDados) {
+      return;
+    }
+
+    List<Coin> currentMoedas = [];
+    int currentPage = 1;
+
+    if (state is MarketLoadedState) {
+      currentMoedas = state.moedas;
+      currentPage = state.paginaAtual;
+    } else if (state is MarketLoadingState) {
+      currentMoedas = state.moedas;
+      currentPage = state.paginaAtual;
+    } else if (state is MarketErrorState) {
+      currentMoedas = state.moedas;
+      currentPage = state.paginaAtual;
+    }
+
+    emit(MarketLoadingState(moedas: currentMoedas, paginaAtual: currentPage, temMaisDados: true));
 
     try {
       final novasMoedas = await _repository.getCoins(
-        page: _state.paginaAtual,
+        page: currentPage,
         perPage: 20,
         sparkline: true,
       );
 
       if (novasMoedas.isEmpty) {
-        _state = _state.copyWith(temMaisDados: false);
+        emit(
+          MarketLoadedState(moedas: currentMoedas, paginaAtual: currentPage, temMaisDados: false),
+        );
       } else {
-        final moedasAtualizadas = [..._state.moedas, ...novasMoedas];
-        _state = _state.copyWith(
-          moedas: moedasAtualizadas,
-          paginaAtual: _state.paginaAtual + 1,
-          status: MarketStatus.carregado,
+        final moedasAtualizadas = [...currentMoedas, ...novasMoedas];
+        emit(
+          MarketLoadedState(
+            moedas: moedasAtualizadas,
+            paginaAtual: currentPage + 1,
+            temMaisDados: true,
+          ),
         );
       }
     } catch (e) {
-      _state = _state.copyWith(status: MarketStatus.erro, mensagemErro: e.toString());
+      emit(
+        MarketErrorState(
+          moedas: currentMoedas,
+          mensagemErro: e.toString(),
+          paginaAtual: currentPage,
+          temMaisDados: true,
+        ),
+      );
     }
-
-    notifyListeners();
   }
 
   Future<void> atualizarMoedas() async {
@@ -56,22 +100,49 @@ class MarketViewModel extends BaseNotifier<MarketState> {
   }
 
   Future<void> alternarFavorito(String moedaId) async {
-    final index = _state.moedas.indexWhere((moeda) => moeda.id == moedaId);
+    final state = currentState;
+    if (state is! MarketLoadedState && state is! MarketErrorState) {
+      return;
+    }
+
+    List<Coin> currentMoedas = [];
+    if (state is MarketLoadedState) {
+      currentMoedas = state.moedas;
+    } else if (state is MarketErrorState) {
+      currentMoedas = state.moedas;
+    }
+
+    final index = currentMoedas.indexWhere((moeda) => moeda.id == moedaId);
     if (index == -1) return;
 
-    final moeda = _state.moedas[index];
-    final novasMoedas = List<Coin>.from(_state.moedas);
+    final moeda = currentMoedas[index];
+    final novasMoedas = List<Coin>.from(currentMoedas);
 
     if (moeda.isFavorite) {
       await _repository.removeFromFavorites(moedaId);
       novasMoedas[index] = moeda.copyWith(isFavorite: false);
-      _state = _state.copyWith(moedas: novasMoedas);
     } else {
       await _repository.addToFavorites(moedaId);
       novasMoedas[index] = moeda.copyWith(isFavorite: true);
-      _state = _state.copyWith(moedas: novasMoedas);
     }
 
-    notifyListeners();
+    if (state is MarketLoadedState) {
+      emit(
+        MarketLoadedState(
+          moedas: novasMoedas,
+          paginaAtual: state.paginaAtual,
+          temMaisDados: state.temMaisDados,
+        ),
+      );
+    } else if (state is MarketErrorState) {
+      emit(
+        MarketErrorState(
+          moedas: novasMoedas,
+          mensagemErro: state.mensagemErro,
+          paginaAtual: state.paginaAtual,
+          temMaisDados: state.temMaisDados,
+        ),
+      );
+    }
   }
 }

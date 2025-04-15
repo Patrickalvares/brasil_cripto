@@ -1,31 +1,38 @@
 import '../../domain/entities/coin.dart';
 
-enum SearchStatus { inicial, pesquisando, sucesso, erro, vazio }
+class SearchState {}
 
-class SearchState {
-  final SearchStatus status;
-  final List<Coin> resultados;
-  final String mensagemErro;
+class SearchInitialState extends SearchState {}
+
+class SearchingState extends SearchState {
   final String ultimaConsulta;
 
-  const SearchState({
-    this.status = SearchStatus.inicial,
-    this.resultados = const [],
-    this.mensagemErro = '',
-    this.ultimaConsulta = '',
-  });
+  SearchingState({this.ultimaConsulta = ''});
+}
 
-  SearchState copyWith({
-    SearchStatus? status,
-    List<Coin>? resultados,
-    String? mensagemErro,
-    String? ultimaConsulta,
-  }) {
-    return SearchState(
-      status: status ?? this.status,
+class SearchSuccessState extends SearchState {
+  final List<Coin> resultados;
+  final String ultimaConsulta;
+
+  SearchSuccessState({this.resultados = const [], this.ultimaConsulta = ''});
+
+  SearchSuccessState copyWith({List<Coin>? resultados, String? ultimaConsulta}) {
+    return SearchSuccessState(
       resultados: resultados ?? this.resultados,
-      mensagemErro: mensagemErro ?? this.mensagemErro,
       ultimaConsulta: ultimaConsulta ?? this.ultimaConsulta,
     );
   }
-} 
+}
+
+class SearchErrorState extends SearchState {
+  final String mensagemErro;
+  final String ultimaConsulta;
+
+  SearchErrorState({this.mensagemErro = '', this.ultimaConsulta = ''});
+}
+
+class SearchEmptyState extends SearchState {
+  final String ultimaConsulta;
+
+  SearchEmptyState({this.ultimaConsulta = ''});
+}

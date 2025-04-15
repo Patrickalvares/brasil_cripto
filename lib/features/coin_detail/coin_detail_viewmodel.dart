@@ -6,44 +6,35 @@ import 'coin_detail_state.dart';
 class CoinDetailViewModel extends BaseNotifier<CoinDetailState> {
   final CoinRepository _repository;
 
-  CoinDetailState _state = const CoinDetailState();
-
-  CoinDetailState get state => _state;
-
   CoinDetailViewModel({required CoinRepository repository})
     : _repository = repository,
-      super(const CoinDetailState());
+      super(CoinDetailInitialState());
 
   Future<void> carregarDetalhesMoeda(String id) async {
-    _state = _state.copyWith(status: DetailStatus.carregando);
-    notifyListeners();
+    emit(CoinDetailLoadingState());
 
     try {
       final detalhe = await _repository.getCoinDetail(id);
-      _state = _state.copyWith(status: DetailStatus.carregado, detalheMoeda: detalhe);
+      emit(CoinDetailLoadedState(detalheMoeda: detalhe));
     } catch (e) {
-      _state = _state.copyWith(status: DetailStatus.erro, mensagemErro: e.toString());
+      emit(CoinDetailErrorState(mensagemErro: e.toString()));
     }
-
-    notifyListeners();
   }
 
   Future<void> alternarFavorito() async {
-    if (_state.detalheMoeda == null) return;
+    final state = currentState;
+    if (state is! CoinDetailLoadedState || state.detalheMoeda == null) return;
 
     try {
-      if (_state.eFavorito) {
-        await _repository.removeFromFavorites(_state.detalheMoeda!.id);
-        _state = _state.copyWith(detalheMoeda: _state.detalheMoeda!.copyWith(isFavorite: false));
+      if (state.eFavorito) {
+        await _repository.removeFromFavorites(state.detalheMoeda!.id);
+        emit(CoinDetailLoadedState(detalheMoeda: state.detalheMoeda!.copyWith(isFavorite: false)));
       } else {
-        await _repository.addToFavorites(_state.detalheMoeda!.id);
-        _state = _state.copyWith(detalheMoeda: _state.detalheMoeda!.copyWith(isFavorite: true));
+        await _repository.addToFavorites(state.detalheMoeda!.id);
+        emit(CoinDetailLoadedState(detalheMoeda: state.detalheMoeda!.copyWith(isFavorite: true)));
       }
-
-      notifyListeners();
     } catch (e) {
-      _state = _state.copyWith(mensagemErro: e.toString());
-      notifyListeners();
+      emit(CoinDetailErrorState(mensagemErro: e.toString()));
     }
   }
 }

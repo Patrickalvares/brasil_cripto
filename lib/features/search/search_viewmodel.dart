@@ -7,47 +7,46 @@ import 'search_state.dart';
 class SearchViewModel extends BaseNotifier<SearchState> {
   final CoinRepository _repository;
 
-  SearchState _state = const SearchState();
-
-  SearchState get state => _state;
-
   SearchViewModel({required CoinRepository repository})
     : _repository = repository,
-      super(const SearchState());
+      super(SearchInitialState());
 
   Future<void> pesquisarMoedas(String consulta) async {
     if (consulta.isEmpty) {
-      _state = _state.copyWith(status: SearchStatus.inicial, resultados: []);
-      notifyListeners();
+      emit(SearchInitialState());
       return;
     }
 
-    if (consulta == _state.ultimaConsulta) return;
+    final state = currentState;
+    if (state is SearchSuccessState && consulta == state.ultimaConsulta) return;
+    if (state is SearchingState && consulta == state.ultimaConsulta) return;
+    if (state is SearchErrorState && consulta == state.ultimaConsulta) return;
+    if (state is SearchEmptyState && consulta == state.ultimaConsulta) return;
 
-    _state = _state.copyWith(status: SearchStatus.pesquisando, ultimaConsulta: consulta);
-    notifyListeners();
+    emit(SearchingState(ultimaConsulta: consulta));
 
     try {
       final resultados = await _repository.searchCoins(consulta);
 
       if (resultados.isEmpty) {
-        _state = _state.copyWith(status: SearchStatus.vazio);
+        emit(SearchEmptyState(ultimaConsulta: consulta));
       } else {
-        _state = _state.copyWith(status: SearchStatus.sucesso, resultados: resultados);
+        emit(SearchSuccessState(resultados: resultados, ultimaConsulta: consulta));
       }
     } catch (e) {
-      _state = _state.copyWith(status: SearchStatus.erro, mensagemErro: e.toString());
+      emit(SearchErrorState(mensagemErro: e.toString(), ultimaConsulta: consulta));
     }
-
-    notifyListeners();
   }
 
   Future<void> alternarFavorito(String moedaId) async {
-    final index = _state.resultados.indexWhere((moeda) => moeda.id == moedaId);
+    final state = currentState;
+    if (state is! SearchSuccessState) return;
+
+    final index = state.resultados.indexWhere((moeda) => moeda.id == moedaId);
     if (index == -1) return;
 
-    final moeda = _state.resultados[index];
-    final novosResultados = List<Coin>.from(_state.resultados);
+    final moeda = state.resultados[index];
+    final novosResultados = List<Coin>.from(state.resultados);
 
     if (moeda.isFavorite) {
       await _repository.removeFromFavorites(moedaId);
@@ -57,12 +56,10 @@ class SearchViewModel extends BaseNotifier<SearchState> {
       novosResultados[index] = moeda.copyWith(isFavorite: true);
     }
 
-    _state = _state.copyWith(resultados: novosResultados);
-    notifyListeners();
+    emit(SearchSuccessState(resultados: novosResultados, ultimaConsulta: state.ultimaConsulta));
   }
 
   void limparPesquisa() {
-    _state = const SearchState();
-    notifyListeners();
+    emit(SearchInitialState());
   }
 }

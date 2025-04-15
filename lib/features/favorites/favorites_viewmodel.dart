@@ -6,45 +6,40 @@ import 'favorites_state.dart';
 class FavoritesViewModel extends BaseNotifier<FavoritesState> {
   final CoinRepository _repository;
 
-  FavoritesState _state = const FavoritesState();
-
-  FavoritesState get state => _state;
-
   FavoritesViewModel({required CoinRepository repository})
     : _repository = repository,
-      super(const FavoritesState());
+      super(FavoritesInitialState());
 
   Future<void> carregarFavoritos() async {
-    _state = _state.copyWith(status: FavoritesStatus.carregando);
-    notifyListeners();
+    emit(FavoritesLoadingState());
 
     try {
       final favoritos = await _repository.getFavoriteCoins();
 
       if (favoritos.isEmpty) {
-        _state = _state.copyWith(status: FavoritesStatus.vazio);
+        emit(FavoritesEmptyState());
       } else {
-        _state = _state.copyWith(status: FavoritesStatus.carregado, moedasFavoritas: favoritos);
+        emit(FavoritesLoadedState(moedasFavoritas: favoritos));
       }
     } catch (e) {
-      _state = _state.copyWith(status: FavoritesStatus.erro, mensagemErro: e.toString());
+      emit(FavoritesErrorState(mensagemErro: e.toString()));
     }
-
-    notifyListeners();
   }
 
   Future<void> removerDosFavoritos(String moedaId) async {
+    final state = currentState;
+
+    if (state is! FavoritesLoadedState) return;
+
     await _repository.removeFromFavorites(moedaId);
 
-    final novasMoedas = _state.moedasFavoritas.where((moeda) => moeda.id != moedaId).toList();
+    final novasMoedas = state.moedasFavoritas.where((moeda) => moeda.id != moedaId).toList();
 
     if (novasMoedas.isEmpty) {
-      _state = _state.copyWith(status: FavoritesStatus.vazio, moedasFavoritas: novasMoedas);
+      emit(FavoritesEmptyState());
     } else {
-      _state = _state.copyWith(moedasFavoritas: novasMoedas);
+      emit(FavoritesLoadedState(moedasFavoritas: novasMoedas));
     }
-
-    notifyListeners();
   }
 
   Future<bool> eFavorito(String moedaId) async {

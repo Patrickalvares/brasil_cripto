@@ -1,11 +1,10 @@
+import 'package:brasil_cripto/core/common_widgets/loading_indicator.dart';
 import 'package:brasil_cripto/utils/state_ful_base_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../core/common_widgets/coin_list_item.dart';
 import '../../core/common_widgets/error_message.dart';
-import '../../core/common_widgets/loading_indicator.dart';
 import '../coin_detail/coin_detail_view.dart';
 import 'favorites_state.dart';
 import 'favorites_viewmodel.dart';
@@ -23,28 +22,23 @@ class _FavoritesViewState extends StatefulBaseState<FavoritesView, FavoritesView
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FavoritesViewModel>().carregarFavoritos();
+      viewModel.carregarFavoritos();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FavoritesViewModel>(
-      builder: (context, viewModel, _) {
-        final state = viewModel.state;
-
-        if (state.status == FavoritesStatus.inicial || state.status == FavoritesStatus.carregando) {
-          return const CoinLoadingIndicator();
-        }
-
-        if (state.status == FavoritesStatus.erro) {
+    return ValueListenableBuilder(
+      valueListenable: viewModel,
+      builder: (_, state, __) {
+        if (state is FavoritesErrorState) {
           return ErrorMessage(
             message: state.mensagemErro,
             onRetry: () => viewModel.carregarFavoritos(),
           );
         }
 
-        if (state.status == FavoritesStatus.vazio) {
+        if (state is FavoritesEmptyState) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -63,58 +57,61 @@ class _FavoritesViewState extends StatefulBaseState<FavoritesView, FavoritesView
           );
         }
 
-        return RefreshIndicator(
-          onRefresh: () => viewModel.carregarFavoritos(),
-          child: ListView.separated(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: state.moedasFavoritas.length,
-            separatorBuilder:
-                (context, index) => const Divider(height: 1, indent: 16, endIndent: 16),
-            itemBuilder: (context, index) {
-              final moeda = state.moedasFavoritas[index];
-              return Dismissible(
-                key: Key(moeda.id),
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 16),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                direction: DismissDirection.endToStart,
-                confirmDismiss: (direction) async {
-                  return await _showConfirmacaoExclusao(context);
-                },
-                onDismissed: (direction) {
-                  viewModel.removerDosFavoritos(moeda.id);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('removedFrom'.tr(namedArgs: {'name': moeda.name})),
-                      action: SnackBarAction(
-                        label: 'undo'.tr(),
-                        onPressed: () {
-                          viewModel.carregarFavoritos();
-                        },
-                      ),
-                    ),
-                  );
-                },
-                child: CoinListItem(
-                  coin: moeda,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CoinDetailView(coinId: moeda.id)),
-                    ).then((_) => viewModel.carregarFavoritos());
+        if (state is FavoritesLoadedState) {
+          return RefreshIndicator(
+            onRefresh: () => viewModel.carregarFavoritos(),
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: (state).moedasFavoritas.length,
+              separatorBuilder:
+                  (context, index) => const Divider(height: 1, indent: 16, endIndent: 16),
+              itemBuilder: (context, index) {
+                final moeda = state.moedasFavoritas[index];
+                return Dismissible(
+                  key: Key(moeda.id),
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 16),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  direction: DismissDirection.endToStart,
+                  confirmDismiss: (direction) async {
+                    return await _showConfirmacaoExclusao(context);
                   },
-                  onFavoriteToggle: () {
+                  onDismissed: (direction) {
                     viewModel.removerDosFavoritos(moeda.id);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('removedFrom'.tr(namedArgs: {'name': moeda.name})),
+                        action: SnackBarAction(
+                          label: 'undo'.tr(),
+                          onPressed: () {
+                            viewModel.carregarFavoritos();
+                          },
+                        ),
+                      ),
+                    );
                   },
-                ),
-              );
-            },
-          ),
-        );
+                  child: CoinListItem(
+                    coin: moeda,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CoinDetailView(coinId: moeda.id)),
+                      ).then((_) => viewModel.carregarFavoritos());
+                    },
+                    onFavoriteToggle: () {
+                      viewModel.removerDosFavoritos(moeda.id);
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        }
+        return const CoinLoadingIndicator();
       },
     );
   }

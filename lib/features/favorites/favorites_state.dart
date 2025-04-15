@@ -1,27 +1,26 @@
 import '../../domain/entities/coin.dart';
 
-enum FavoritesStatus { inicial, carregando, carregado, erro, vazio }
+class FavoritesState {}
 
-class FavoritesState {
-  final FavoritesStatus status;
+class FavoritesInitialState extends FavoritesState {}
+
+class FavoritesLoadingState extends FavoritesState {}
+
+class FavoritesLoadedState extends FavoritesState {
   final List<Coin> moedasFavoritas;
-  final String mensagemErro;
 
-  const FavoritesState({
-    this.status = FavoritesStatus.inicial,
-    this.moedasFavoritas = const [],
-    this.mensagemErro = '',
-  });
+  FavoritesLoadedState({this.moedasFavoritas = const []});
 
-  FavoritesState copyWith({
-    FavoritesStatus? status,
-    List<Coin>? moedasFavoritas,
-    String? mensagemErro,
-  }) {
-    return FavoritesState(
-      status: status ?? this.status,
-      moedasFavoritas: moedasFavoritas ?? this.moedasFavoritas,
-      mensagemErro: mensagemErro ?? this.mensagemErro,
-    );
+  FavoritesLoadedState copyWith({List<Coin>? moedasFavoritas}) {
+    return FavoritesLoadedState(moedasFavoritas: moedasFavoritas ?? this.moedasFavoritas);
   }
-} 
+}
+
+class FavoritesErrorState extends FavoritesState {
+  final String mensagemErro;
+  final List<Coin> moedasFavoritas;
+
+  FavoritesErrorState({this.mensagemErro = '', this.moedasFavoritas = const []});
+}
+
+class FavoritesEmptyState extends FavoritesState {}

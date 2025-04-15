@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../core/common_widgets/error_message.dart';
 import 'coin_detail_state.dart';
@@ -24,7 +23,7 @@ class _CoinDetailViewState extends StatefulBaseState<CoinDetailView, CoinDetailV
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CoinDetailViewModel>().carregarDetalhesMoeda(widget.coinId);
+      viewModel.carregarDetalhesMoeda(widget.coinId);
     });
   }
 
@@ -34,11 +33,10 @@ class _CoinDetailViewState extends StatefulBaseState<CoinDetailView, CoinDetailV
       appBar: AppBar(
         title: Text('coin_details'.tr()),
         actions: [
-          Consumer<CoinDetailViewModel>(
-            builder: (context, viewModel, _) {
-              final state = viewModel.state;
-
-              if (state.status == DetailStatus.carregado) {
+          ValueListenableBuilder(
+            valueListenable: viewModel,
+            builder: (_, state, __) {
+              if (state is CoinDetailLoadedState) {
                 return IconButton(
                   icon: Icon(
                     state.eFavorito ? Icons.star : Icons.star_border,
@@ -54,22 +52,21 @@ class _CoinDetailViewState extends StatefulBaseState<CoinDetailView, CoinDetailV
           ),
         ],
       ),
-      body: Consumer<CoinDetailViewModel>(
-        builder: (context, viewModel, _) {
-          final state = viewModel.state;
-
-          if (state.status == DetailStatus.inicial || state.status == DetailStatus.carregando) {
+      body: ValueListenableBuilder(
+        valueListenable: viewModel,
+        builder: (_, state, __) {
+          if (state is CoinDetailInitialState || state is CoinDetailLoadingState) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.status == DetailStatus.erro) {
+          if (state is CoinDetailErrorState) {
             return ErrorMessage(
               message: state.mensagemErro,
               onRetry: () => viewModel.carregarDetalhesMoeda(widget.coinId),
             );
           }
 
-          final moeda = state.detalheMoeda!;
+          final moeda = (state as CoinDetailLoadedState).detalheMoeda!;
 
           return RefreshIndicator(
             onRefresh: () => viewModel.carregarDetalhesMoeda(widget.coinId),
