@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+import '../services/injections.dart';
 import '../services/locale_provider.dart';
 import '../services/theme_provider.dart';
 
@@ -27,8 +27,8 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final localeProvider = Provider.of<LocaleProvider>(context);
+    final themeProvider = i<ThemeProvider>();
+    final localeProvider = i<LocaleProvider>();
 
     return Drawer(
       child: Column(
@@ -145,86 +145,87 @@ class AppDrawer extends StatelessWidget {
   }
 
   Widget _buildThemeSwitcher(BuildContext context, ThemeProvider themeProvider) {
-    return ExpansionTile(
-      leading: Icon(themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode),
-      title: Text('theme'.tr()),
-      children: [
-        RadioListTile<ThemeMode>(
-          title: Text('systemTheme'.tr()),
-          value: ThemeMode.system,
-          groupValue: themeProvider.themeMode,
-          onChanged: (ThemeMode? mode) {
-            if (mode != null) {
-              themeProvider.setThemeMode(mode);
-            }
-          },
-        ),
-        RadioListTile<ThemeMode>(
-          title: Text('lightTheme'.tr()),
-          value: ThemeMode.light,
-          groupValue: themeProvider.themeMode,
-          onChanged: (ThemeMode? mode) {
-            if (mode != null) {
-              themeProvider.setThemeMode(mode);
-            }
-          },
-        ),
-        RadioListTile<ThemeMode>(
-          title: Text('darkTheme'.tr()),
-          value: ThemeMode.dark,
-          groupValue: themeProvider.themeMode,
-          onChanged: (ThemeMode? mode) {
-            if (mode != null) {
-              themeProvider.setThemeMode(mode);
-            }
-          },
-        ),
-      ],
+    return ValueListenableBuilder(
+      valueListenable: themeProvider,
+      builder: (_, themeMode, __) {
+        return ExpansionTile(
+          leading: Icon(themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode),
+          title: Text('theme'.tr()),
+          children: [
+            RadioListTile<ThemeMode>(
+              title: Text('systemTheme'.tr()),
+              value: ThemeMode.system,
+              groupValue: themeProvider.themeMode,
+              onChanged: (ThemeMode? mode) {
+                if (mode != null) {
+                  themeProvider.setThemeMode(mode);
+                }
+              },
+            ),
+            RadioListTile<ThemeMode>(
+              title: Text('lightTheme'.tr()),
+              value: ThemeMode.light,
+              groupValue: themeProvider.themeMode,
+              onChanged: (ThemeMode? mode) {
+                if (mode != null) {
+                  themeProvider.setThemeMode(mode);
+                }
+              },
+            ),
+            RadioListTile<ThemeMode>(
+              title: Text('darkTheme'.tr()),
+              value: ThemeMode.dark,
+              groupValue: themeProvider.themeMode,
+              onChanged: (ThemeMode? mode) {
+                if (mode != null) {
+                  themeProvider.setThemeMode(mode);
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildLanguageSwitcher(BuildContext context, LocaleProvider localeProvider) {
-    return ExpansionTile(
-      leading: const Icon(Icons.language),
-      title: Text('language'.tr()),
-      children: [
-        RadioListTile<Locale>(
-          title: Text('portuguese'.tr()),
-          value: const Locale('pt', 'BR'),
-          groupValue: localeProvider.locale,
-          onChanged: (Locale? locale) {
-            if (locale != null) {
-              localeProvider.setLocale(locale);
-              context.setLocale(locale);
-            }
-          },
-        ),
-        RadioListTile<Locale>(
-          title: Text('english'.tr()),
-          value: const Locale('en', 'US'),
-          groupValue: localeProvider.locale,
-          onChanged: (Locale? locale) {
-            if (locale != null) {
-              localeProvider.setLocale(locale);
-              context.setLocale(locale);
-            }
-          },
-        ),
-      ],
+    return ValueListenableBuilder(
+      valueListenable: localeProvider,
+      builder: (_, locale, __) {
+        return ExpansionTile(
+          leading: const Icon(Icons.language),
+          title: Text('language'.tr()),
+          children: [
+            RadioListTile<Locale>(
+              title: Text('portuguese'.tr()),
+              value: const Locale('pt', 'BR'),
+              groupValue: localeProvider.locale,
+              onChanged: (Locale? locale) {
+                if (locale != null) {
+                  localeProvider.setLocale(locale);
+                  context.setLocale(locale);
+                }
+              },
+            ),
+            RadioListTile<Locale>(
+              title: Text('english'.tr()),
+              value: const Locale('en', 'US'),
+              groupValue: localeProvider.locale,
+              onChanged: (Locale? locale) {
+                if (locale != null) {
+                  localeProvider.setLocale(locale);
+                  context.setLocale(locale);
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
   void _navigateToScreen(BuildContext context, int index) {
-    Navigator.pop(context);
-
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.clearSnackBars();
-
-    if ((index == 0 && selectedOption != 'market'.tr()) ||
-        (index == 1 && selectedOption != 'search'.tr()) ||
-        (index == 2 && selectedOption != 'favorites'.tr())) {
-      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false, arguments: index);
-    }
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false, arguments: index);
   }
 
   void _showAboutDialog(BuildContext context) {
