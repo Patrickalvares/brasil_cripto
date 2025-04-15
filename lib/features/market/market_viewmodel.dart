@@ -12,86 +12,18 @@ class MarketViewModel extends BaseNotifier<MarketState> {
       super(MarketInitialState());
 
   Future<void> carregarMoedas({bool atualizar = false}) async {
-    final state = currentState;
-
-    if (atualizar) {
-      emit(MarketLoadingState(moedas: [], paginaAtual: 1, temMaisDados: true));
-
-      try {
-        final novasMoedas = await _repository.getCoins(page: 1, perPage: 20, sparkline: true);
-
-        if (novasMoedas.isEmpty) {
-          emit(MarketLoadedState(moedas: [], paginaAtual: 1, temMaisDados: false));
-        } else {
-          emit(MarketLoadedState(moedas: novasMoedas, paginaAtual: 2, temMaisDados: true));
-        }
-      } catch (e) {
-        emit(
-          MarketErrorState(
-            moedas: [],
-            mensagemErro: e.toString(),
-            paginaAtual: 1,
-            temMaisDados: true,
-          ),
-        );
-      }
+    if (currentState is MarketLoadingState && !atualizar) {
       return;
     }
 
-    if (state is MarketLoadingState) {
-      return;
-    }
-
-    if (state is MarketLoadedState && !state.temMaisDados) {
-      return;
-    }
-
-    List<Coin> currentMoedas = [];
-    int currentPage = 1;
-
-    if (state is MarketLoadedState) {
-      currentMoedas = state.moedas;
-      currentPage = state.paginaAtual;
-    } else if (state is MarketLoadingState) {
-      currentMoedas = state.moedas;
-      currentPage = state.paginaAtual;
-    } else if (state is MarketErrorState) {
-      currentMoedas = state.moedas;
-      currentPage = state.paginaAtual;
-    }
-
-    emit(MarketLoadingState(moedas: currentMoedas, paginaAtual: currentPage, temMaisDados: true));
+    emit(MarketLoadingState(moedas: []));
 
     try {
-      final novasMoedas = await _repository.getCoins(
-        page: currentPage,
-        perPage: 20,
-        sparkline: true,
-      );
+      final moedas = await _repository.getCoins(page: 1, perPage: 20, sparkline: true);
 
-      if (novasMoedas.isEmpty) {
-        emit(
-          MarketLoadedState(moedas: currentMoedas, paginaAtual: currentPage, temMaisDados: false),
-        );
-      } else {
-        final moedasAtualizadas = [...currentMoedas, ...novasMoedas];
-        emit(
-          MarketLoadedState(
-            moedas: moedasAtualizadas,
-            paginaAtual: currentPage + 1,
-            temMaisDados: true,
-          ),
-        );
-      }
+      emit(MarketLoadedState(moedas: moedas));
     } catch (e) {
-      emit(
-        MarketErrorState(
-          moedas: currentMoedas,
-          mensagemErro: e.toString(),
-          paginaAtual: currentPage,
-          temMaisDados: true,
-        ),
-      );
+      emit(MarketErrorState(moedas: [], mensagemErro: e.toString()));
     }
   }
 
@@ -127,22 +59,9 @@ class MarketViewModel extends BaseNotifier<MarketState> {
     }
 
     if (state is MarketLoadedState) {
-      emit(
-        MarketLoadedState(
-          moedas: novasMoedas,
-          paginaAtual: state.paginaAtual,
-          temMaisDados: state.temMaisDados,
-        ),
-      );
+      emit(MarketLoadedState(moedas: novasMoedas));
     } else if (state is MarketErrorState) {
-      emit(
-        MarketErrorState(
-          moedas: novasMoedas,
-          mensagemErro: state.mensagemErro,
-          paginaAtual: state.paginaAtual,
-          temMaisDados: state.temMaisDados,
-        ),
-      );
+      emit(MarketErrorState(moedas: novasMoedas, mensagemErro: state.mensagemErro));
     }
   }
 }

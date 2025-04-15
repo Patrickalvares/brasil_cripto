@@ -55,20 +55,16 @@ class _MarketViewState extends StatefulBaseState<MarketView, MarketViewModel> {
         }
 
         List<Coin> moedas = [];
-        bool temMaisDados = false;
         bool isLoading = false;
 
         if (state is MarketLoadedState) {
           moedas = state.moedas;
-          temMaisDados = state.temMaisDados;
           isLoading = false;
         } else if (state is MarketLoadingState) {
           moedas = state.moedas;
-          temMaisDados = state.temMaisDados;
           isLoading = true;
         } else if (state is MarketErrorState) {
           moedas = state.moedas;
-          temMaisDados = state.temMaisDados;
           isLoading = false;
         }
 
@@ -79,7 +75,6 @@ class _MarketViewState extends StatefulBaseState<MarketView, MarketViewModel> {
         return MarketList(
           coins: moedas,
           isLoading: isLoading,
-          hasMoreData: temMaisDados,
           scrollController: _scrollController.scrollController,
           viewModel: viewModel,
           onRefresh: () => viewModel.atualizarMoedas(),
