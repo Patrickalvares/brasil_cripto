@@ -49,5 +49,18 @@
   "day_thu": "Thu",
   "day_fri": "Fri",
   "day_sat": "Sat",
-  "limit_exceeded_aguarde": "Rate limit exceeded for the API, wait a few moments and try again"
+  "limit_exceeded_aguarde": "Rate limit exceeded for the API, wait a few moments and try again",
+  
+  "welcome_title": "Welcome to Brazil Crypto!",
+  "welcome_description": "Your app to monitor cryptocurrencies in real-time. Track prices, add to favorites, and stay up to date with the market!",
+  "initial_setup": "Initial Setup",
+  "choose_preferences": "Choose your preferences",
+  "base_currency": "Base Currency",
+  "currency_description": "Currency used to display cryptocurrency prices",
+  "brazilian_real": "Brazilian Real (R$)",
+  "american_dollar": "American Dollar ($)",
+  "euro": "Euro (€)",
+  "continue": "Continue",
+  "later": "Later",
+  "confirm_settings": "Confirm Settings"
 }

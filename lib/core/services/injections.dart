@@ -12,6 +12,7 @@ import 'api_service.dart';
 import 'cache_service.dart';
 import 'currency_provider.dart';
 import 'locale_provider.dart';
+import 'onboarding_service.dart';
 import 'storage_service.dart';
 import 'theme_provider.dart';
 
@@ -22,6 +23,7 @@ void setupInjections() {
   i.registerLazySingleton<ApiService>(() => ApiService());
   i.registerLazySingleton<StorageService>(() => StorageService());
   i.registerLazySingleton<CacheService>(() => CacheService());
+  i.registerLazySingleton<OnboardingService>(() => OnboardingService());
 
   // Providers
   i.registerLazySingleton<ThemeProvider>(() => ThemeProvider());

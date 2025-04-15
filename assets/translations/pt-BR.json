@@ -49,5 +49,18 @@
   "day_thu": "Qui",
   "day_fri": "Sex",
   "day_sat": "Sáb",
-  "limit_exceeded_aguarde": "Limite de requisições excedido para a API, aguarde alguns instantes e tente novamente"
+  "limit_exceeded_aguarde": "Limite de requisições excedido para a API, aguarde alguns instantes e tente novamente",
+  
+  "welcome_title": "Bem-vindo ao Brasil Cripto!",
+  "welcome_description": "Seu aplicativo para monitorar criptomoedas em tempo real. Acompanhe os preços, adicione aos favoritos e fique por dentro do mercado!",
+  "initial_setup": "Configuração Inicial",
+  "choose_preferences": "Escolha suas preferências",
+  "base_currency": "Moeda Base",
+  "currency_description": "Moeda usada para exibir os preços das criptomoedas",
+  "brazilian_real": "Real Brasileiro (R$)",
+  "american_dollar": "Dólar Americano ($)",
+  "euro": "Euro (€)",
+  "continue": "Continuar",
+  "later": "Depois",
+  "confirm_settings": "Confirmar Configurações"
 }
