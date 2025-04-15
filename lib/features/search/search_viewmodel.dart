@@ -18,7 +18,7 @@ class SearchViewModel extends BaseNotifier<SearchState> {
     }
 
     final state = currentState;
-    if (state is SearchSuccessState && consulta == state.ultimaConsulta) return;
+    if (state is SearchLoadedState && consulta == state.ultimaConsulta) return;
     if (state is SearchingState && consulta == state.ultimaConsulta) return;
     if (state is SearchErrorState && consulta == state.ultimaConsulta) return;
     if (state is SearchEmptyState && consulta == state.ultimaConsulta) return;
@@ -31,7 +31,7 @@ class SearchViewModel extends BaseNotifier<SearchState> {
       if (resultados.isEmpty) {
         emit(SearchEmptyState(ultimaConsulta: consulta));
       } else {
-        emit(SearchSuccessState(resultados: resultados, ultimaConsulta: consulta));
+        emit(SearchLoadedState(resultados: resultados, ultimaConsulta: consulta));
       }
     } catch (e) {
       emit(SearchErrorState(mensagemErro: e.toString(), ultimaConsulta: consulta));
@@ -40,7 +40,7 @@ class SearchViewModel extends BaseNotifier<SearchState> {
 
   Future<void> alternarFavorito(String moedaId) async {
     final state = currentState;
-    if (state is! SearchSuccessState) return;
+    if (state is! SearchLoadedState) return;
 
     final index = state.resultados.indexWhere((moeda) => moeda.id == moedaId);
     if (index == -1) return;
@@ -56,7 +56,7 @@ class SearchViewModel extends BaseNotifier<SearchState> {
       novosResultados[index] = moeda.copyWith(isFavorite: true);
     }
 
-    emit(SearchSuccessState(resultados: novosResultados, ultimaConsulta: state.ultimaConsulta));
+    emit(SearchLoadedState(resultados: novosResultados, ultimaConsulta: state.ultimaConsulta));
   }
 
   void limparPesquisa() {

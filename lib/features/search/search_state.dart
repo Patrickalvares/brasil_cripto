@@ -10,14 +10,14 @@ class SearchingState extends SearchState {
   SearchingState({this.ultimaConsulta = ''});
 }
 
-class SearchSuccessState extends SearchState {
+class SearchLoadedState extends SearchState {
   final List<Coin> resultados;
   final String ultimaConsulta;
 
-  SearchSuccessState({this.resultados = const [], this.ultimaConsulta = ''});
+  SearchLoadedState({this.resultados = const [], this.ultimaConsulta = ''});
 
-  SearchSuccessState copyWith({List<Coin>? resultados, String? ultimaConsulta}) {
-    return SearchSuccessState(
+  SearchLoadedState copyWith({List<Coin>? resultados, String? ultimaConsulta}) {
+    return SearchLoadedState(
       resultados: resultados ?? this.resultados,
       ultimaConsulta: ultimaConsulta ?? this.ultimaConsulta,
     );
