@@ -26,6 +26,15 @@ class CoinDetailModel extends CoinDetail {
   });
 
   factory CoinDetailModel.fromJson(Map<String, dynamic> json, {bool isFavorite = false}) {
+    List<double>? sparklineData;
+    if (json['market_data'] != null &&
+        json['market_data']['sparkline_7d'] != null &&
+        json['market_data']['sparkline_7d']['price'] != null) {
+      sparklineData = List<double>.from(
+        json['market_data']['sparkline_7d']['price'].map((x) => x.toDouble()),
+      );
+    }
+
     return CoinDetailModel(
       id: json['id'],
       symbol: json['symbol'] ?? '',
@@ -38,6 +47,7 @@ class CoinDetailModel extends CoinDetail {
       high24h: json['market_data']?['high_24h']?['usd']?.toDouble(),
       low24h: json['market_data']?['low_24h']?['usd']?.toDouble(),
       totalVolume: json['market_data']?['total_volume']?['usd']?.toDouble(),
+      sparklineData: sparklineData,
       isFavorite: isFavorite,
       description: json['description']?['en'],
       marketData: json['market_data'],
@@ -56,15 +66,20 @@ class CoinDetailModel extends CoinDetail {
       'symbol': symbol,
       'name': name,
       'image': {'large': image},
-      'market_data': marketData,
+      'market_data': {
+        ...marketData ?? {},
+        'sparkline_7d': sparklineData != null ? {'price': sparklineData} : null,
+      },
       'market_cap_rank': marketCapRank,
       'description': {'en': description},
       'tickers': tickers,
       'community_data': communityData?[0],
       'developer_data': developerData?[0],
       'genesis_date': genesisDate,
-      'links': {'homepage': [homepageUrl]},
+      'links': {
+        'homepage': [homepageUrl],
+      },
       'categories': categories,
     };
   }
-} 
+}

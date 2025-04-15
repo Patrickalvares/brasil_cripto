@@ -12,7 +12,7 @@ abstract class CoinDataSource {
   });
 
   Future<List<CoinModel>> searchCoins(String query);
-  
+
   Future<CoinDetailModel> getCoinDetail(String id);
 }
 
@@ -38,7 +38,7 @@ class CoinDataSourceImpl implements CoinDataSource {
       };
 
       final response = await _apiService.get(ApiConstants.markets, queryParams: queryParams);
-      
+
       if (response.statusCode == 200) {
         final List<dynamic> coinListJson = response.data;
         return coinListJson.map((json) => CoinModel.fromJson(json)).toList();
@@ -53,12 +53,10 @@ class CoinDataSourceImpl implements CoinDataSource {
   @override
   Future<List<CoinModel>> searchCoins(String query) async {
     try {
-      final queryParams = {
-        ApiConstants.query: query,
-      };
+      final queryParams = {ApiConstants.query: query};
 
       final response = await _apiService.get(ApiConstants.search, queryParams: queryParams);
-      
+
       if (response.statusCode == 200) {
         final List<dynamic> coinListJson = response.data['coins'] ?? [];
         return coinListJson.map((json) => CoinModel.fromSearchResult(json)).toList();
@@ -79,10 +77,11 @@ class CoinDataSourceImpl implements CoinDataSource {
         'market_data': true,
         'community_data': true,
         'developer_data': true,
+        'sparkline': true,
       };
 
       final response = await _apiService.get('${ApiConstants.coins}/$id', queryParams: queryParams);
-      
+
       if (response.statusCode == 200) {
         return CoinDetailModel.fromJson(response.data);
       } else {
@@ -92,4 +91,4 @@ class CoinDataSourceImpl implements CoinDataSource {
       throw Exception('Failed to load coin detail: $e');
     }
   }
-} 
+}

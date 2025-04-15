@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:brasil_cripto/utils/base_notifier.dart';
 
 import '../../domain/repositories/coin_repository.dart';
@@ -15,10 +17,31 @@ class CoinDetailViewModel extends BaseNotifier<CoinDetailState> {
 
     try {
       final detalhe = await _repository.getCoinDetail(id);
-      emit(CoinDetailLoadedState(detalheMoeda: detalhe));
+
+      if (detalhe.sparklineData == null || detalhe.sparklineData!.isEmpty) {
+        final sparklineSimulado = _gerarDadosSparklineSimulados(detalhe.currentPrice ?? 1000.0);
+        emit(
+          CoinDetailLoadedState(detalheMoeda: detalhe.copyWith(sparklineData: sparklineSimulado)),
+        );
+      } else {
+        emit(CoinDetailLoadedState(detalheMoeda: detalhe));
+      }
     } catch (e) {
       emit(CoinDetailErrorState(mensagemErro: e.toString()));
     }
+  }
+
+  List<double> _gerarDadosSparklineSimulados(double precoBase) {
+    final random = Random();
+    final sparklineData = <double>[];
+
+    for (var i = 0; i < 168; i++) {
+      final variacao = (random.nextDouble() - 0.5) * 0.1;
+      final preco = precoBase * (1 + variacao);
+      sparklineData.add(preco);
+    }
+
+    return sparklineData;
   }
 
   Future<void> alternarFavorito() async {
