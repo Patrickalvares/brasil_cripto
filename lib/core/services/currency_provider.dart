@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CurrencyProvider extends ChangeNotifier implements ValueListenable<String> {
   static const String _prefsKey = 'selected_currency';
 
-  String _currency = 'brl'; // Valor padrão: Real brasileiro
+  String _currency = 'usd'; // Valor padrão: Dólar americano
 
   @override
   String get value => _currency;
