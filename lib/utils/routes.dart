@@ -9,6 +9,7 @@ abstract interface class IRoutes {
 }
 
 enum AppRoutes {
+  splash(path: '/'),
   market(path: '/market'),
   favorites(path: '/favorites'),
   coinDetail(path: '/coin-detail'),

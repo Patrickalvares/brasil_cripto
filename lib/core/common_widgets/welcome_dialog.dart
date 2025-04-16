@@ -60,7 +60,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
 
   void _saveSettings() async {
     await _themeProvider.setThemeMode(_selectedTheme);
-    await _localeProvider.setLocale(_selectedLocale);
+    await _localeProvider.setLocale(_selectedLocale, context);
     await _currencyProvider.setCurrency(_selectedCurrency);
 
     await _onboardingService.completeOnboarding();
@@ -271,7 +271,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
           setState(() {
             _selectedLocale = value;
           });
-          _localeProvider.setLocale(value);
+          _localeProvider.setLocale(value, context);
           context.setLocale(value);
         }
       },

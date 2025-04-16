@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:brasil_cripto/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +21,7 @@ class LocaleProvider extends ValueNotifier<Locale> {
     value = Locale(languageCode, countryCode);
   }
 
-  Future<void> setLocale(Locale locale) async {
+  Future<void> setLocale(Locale locale, BuildContext context) async {
     if (value == locale) return;
 
     value = locale;
@@ -26,6 +29,7 @@ class LocaleProvider extends ValueNotifier<Locale> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language_code', locale.languageCode);
     await prefs.setString('country_code', locale.countryCode ?? '');
+    Navigator.pushReplacementNamed(context, AppRoutes.splash.path);
   }
 
   bool isCurrentLocale(Locale locale) {

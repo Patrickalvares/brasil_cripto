@@ -213,7 +213,7 @@ class AppDrawer extends StatelessWidget {
               groupValue: localeProvider.locale,
               onChanged: (Locale? locale) {
                 if (locale != null) {
-                  localeProvider.setLocale(locale);
+                  localeProvider.setLocale(locale, context);
                   context.setLocale(locale);
                 }
               },
@@ -224,7 +224,7 @@ class AppDrawer extends StatelessWidget {
               groupValue: localeProvider.locale,
               onChanged: (Locale? locale) {
                 if (locale != null) {
-                  localeProvider.setLocale(locale);
+                  localeProvider.setLocale(locale, context);
                   context.setLocale(locale);
                 }
               },
