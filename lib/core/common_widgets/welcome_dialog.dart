@@ -82,6 +82,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      insetPadding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.85,
@@ -117,7 +118,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
                         curve: Curves.easeInOut,
                       );
                     },
-                    child: Text('cancel'.tr()),
+                    child: Text('back'.tr()),
                   )
                 else
                   TextButton(
@@ -128,7 +129,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
                   ),
                 ElevatedButton(
                   onPressed: _nextPage,
-                  child: Text(_currentPage == 3 ? 'confirm_settings'.tr() : 'continue'.tr()),
+                  child: Text(_currentPage == 3 ? 'confirm'.tr() : 'continue'.tr()),
                 ),
               ],
             ),
@@ -153,14 +154,6 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
         Text(
           'welcome_description'.tr(),
           style: Theme.of(context).textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'initial_setup'.tr(),
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
           textAlign: TextAlign.center,
         ),
       ],
@@ -228,8 +221,9 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 32),
-        _buildCurrencyOption('brl', 'brazilian_real'.tr()),
+
         _buildCurrencyOption('usd', 'american_dollar'.tr()),
+        _buildCurrencyOption('brl', 'brazilian_real'.tr()),
         _buildCurrencyOption('eur', 'euro'.tr()),
       ],
     );
@@ -263,9 +257,9 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
     return RadioListTile<Locale>(
       title: Row(
         children: [
-          Text(flag, style: const TextStyle(fontSize: 24)),
+          Text(flag, style: TextStyle(fontSize: 24.sp)),
           const SizedBox(width: 16),
-          Text(title),
+          Text(title, style: TextStyle(fontSize: 16.sp)),
         ],
       ),
       value: locale,
