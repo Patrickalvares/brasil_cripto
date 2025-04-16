@@ -1,3 +1,4 @@
+import 'package:brasil_cripto/core/common_widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_app_bar.dart';
@@ -25,17 +26,12 @@ class BaseScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: title,
-        actions: actions,
-      ),
-      drawer: AppDrawer(
-        selectedOption: drawerSelectedOption,
-      ),
+      appBar: CustomAppBar(title: title, actions: actions),
+      drawer: AppDrawer(selectedOption: drawerSelectedOption),
       body: body,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       bottomNavigationBar: bottomNavigationBar,
     );
   }
-} 
+}
