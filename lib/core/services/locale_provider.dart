@@ -21,7 +21,7 @@ class LocaleProvider extends ValueNotifier<Locale> {
     value = Locale(languageCode, countryCode);
   }
 
-  Future<void> setLocale(Locale locale, BuildContext context) async {
+  Future<void> setLocale(Locale locale, BuildContext? context) async {
     if (value == locale) return;
 
     value = locale;
@@ -29,7 +29,9 @@ class LocaleProvider extends ValueNotifier<Locale> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language_code', locale.languageCode);
     await prefs.setString('country_code', locale.countryCode ?? '');
-    Navigator.pushReplacementNamed(context, AppRoutes.splash.path);
+    if (context != null) {
+      Navigator.pushReplacementNamed(context, AppRoutes.splash.path);
+    }
   }
 
   bool isCurrentLocale(Locale locale) {
