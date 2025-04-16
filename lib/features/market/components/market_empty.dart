@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class MarketEmpty extends StatelessWidget {
@@ -11,7 +12,7 @@ class MarketEmpty extends StatelessWidget {
         children: [
           const Icon(Icons.currency_bitcoin, size: 80, color: Colors.grey),
           const SizedBox(height: 16),
-          Text('Nenhuma moeda disponível', style: Theme.of(context).textTheme.titleMedium),
+          Text('no_market_data'.tr(), style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
         ],
       ),

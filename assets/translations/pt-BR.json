@@ -64,5 +64,7 @@
   "continue": "Continuar",
   "later": "Depois",
   "confirm": "Confirmar",
-  "back": "Voltar"
+  "back": "Voltar",
+  "no_chart_data": "Dados do gráfico não disponíveis",
+  "no_market_data": "Nenhuma moeda disponível"
 }

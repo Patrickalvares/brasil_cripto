@@ -93,10 +93,10 @@ class AppDrawer extends StatelessWidget {
       builder: (_, __, ___) {
         return ExpansionTile(
           leading: const Icon(Icons.attach_money),
-          title: Text('Moeda Base'),
+          title: Text('base_currency'.tr()),
           children: [
             RadioListTile<String>(
-              title: const Text('Real Brasileiro (R\$)'),
+              title: Text('brazilian_real'.tr()),
               value: 'brl',
               groupValue: currencyProvider.currency,
               onChanged: (String? currency) {
@@ -106,7 +106,7 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             RadioListTile<String>(
-              title: const Text('Dólar Americano (\$)'),
+              title: Text('american_dollar'.tr()),
               value: 'usd',
               groupValue: currencyProvider.currency,
               onChanged: (String? currency) {
@@ -116,7 +116,7 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             RadioListTile<String>(
-              title: const Text('Euro (€)'),
+              title: Text('euro'.tr()),
               value: 'eur',
               groupValue: currencyProvider.currency,
               onChanged: (String? currency) {

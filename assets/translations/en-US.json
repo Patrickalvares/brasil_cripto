@@ -64,5 +64,7 @@
   "continue": "Continue",
   "later": "Later",
   "confirm": "Confirm",
-  "back": "Back"
+  "back": "Back",
+  "no_chart_data": "No chart data available",
+  "no_market_data": "No coins available"
 }

@@ -31,7 +31,7 @@ class PriceChart extends StatelessWidget {
                   Icon(Icons.show_chart, size: 48, color: Colors.grey.withValues(alpha: 0.5)),
                   const SizedBox(height: 8),
                   Text(
-                    'No chart data available',
+                    'no_chart_data'.tr(),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey),
                   ),
                 ],
