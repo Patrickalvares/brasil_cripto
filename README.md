@@ -4,11 +4,25 @@ Aplicativo para acompanhamento de criptomoedas em tempo real com múltiplas func
 
 ## Arquitetura e Tecnologias 🏗️
 
-O projeto foi desenvolvido utilizando Flutter 3.29.0 com uma arquitetura inspirada no Clean Architecture, organizando o código em camadas bem definidas:
+O projeto foi desenvolvido utilizando Flutter 3.29.0 com uma arquitetura MVVM (Model-View-ViewModel) combinada com conceitos de Clean Architecture, organizando o código em camadas bem definidas:
 
 - **Core**: Componentes fundamentais e serviços base
 - **Features**: Funcionalidades organizadas em módulos independentes
 - **Services**: Serviços de acesso a APIs e dados externos
+
+### Padrão Arquitetural MVVM com State Partner 🧩
+
+O projeto segue o padrão MVVM adaptado para Flutter com a implementação do State Partner para facilitar a comunicação entre camadas:
+
+- **View**: Camada de UI responsável apenas pela renderização e captura de eventos do usuário. Implementada através de Widgets Flutter que se comunicam exclusivamente com sua ViewModel correspondente.
+
+- **ViewModel**: Camada de lógica de apresentação que processa eventos da UI, gerencia estado e se comunica com os Repositories. Implementada com ChangeNotifier para notificar a View sobre mudanças de estado.
+
+- **State Partner**: Padrão auxiliar que facilita a comunicação entre a View e a ViewModel, organizando o estado da aplicação de forma estruturada e garantindo a coesão entre as camadas.
+
+- **Repository**: Camada responsável pela lógica de negócios e orquestração de fontes de dados. Abstrai a origem dos dados (API, banco local, etc) para as ViewModels.
+
+- **DataSource**: Camada mais baixa responsável pelo acesso direto a fontes de dados externas (APIs) ou locais SharedPreferences.
 
 ### Tecnologias Principais ⚙️
 
