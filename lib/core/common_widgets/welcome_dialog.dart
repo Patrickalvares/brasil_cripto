@@ -255,7 +255,6 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
   }
 
   Widget _buildLanguageOption(Locale locale, String title, String flag) {
-    final isSelected = _selectedLocale.languageCode == locale.languageCode;
     return RadioListTile<Locale>(
       title: Row(
         children: [
@@ -279,7 +278,6 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
   }
 
   Widget _buildCurrencyOption(String currency, String title) {
-    final isSelected = _selectedCurrency == currency;
     return RadioListTile<String>(
       title: Row(children: [Text(title, style: TextStyle(fontSize: 16.sp))]),
       value: currency,

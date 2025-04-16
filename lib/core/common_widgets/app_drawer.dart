@@ -235,10 +235,6 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  void _navigateToScreen(BuildContext context, int index) {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false, arguments: index);
-  }
-
   void _showAboutDialog(BuildContext context) {
     showDialog(
       context: context,
