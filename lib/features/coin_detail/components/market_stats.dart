@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MarketStats extends StatelessWidget {
   final double? marketCap;
@@ -30,12 +31,16 @@ class MarketStats extends StatelessWidget {
           label: 'market_cap'.tr(),
           value: marketCap != null ? formatter.format(marketCap) : '-',
         ),
+        Divider(color: Theme.of(context).colorScheme.outline),
         StatRow(
           label: 'volume_24h'.tr(),
           value: totalVolume != null ? formatter.format(totalVolume) : '-',
         ),
+        Divider(color: Theme.of(context).colorScheme.outline),
         StatRow(label: 'market_rank'.tr(), value: marketCapRank != null ? '#$marketCapRank' : '-'),
+        Divider(color: Theme.of(context).colorScheme.outline),
         StatRow(label: 'high_24h'.tr(), value: high24h != null ? formatter.format(high24h) : '-'),
+        Divider(color: Theme.of(context).colorScheme.outline),
         StatRow(label: 'low_24h'.tr(), value: low24h != null ? formatter.format(low24h) : '-'),
       ],
     );
@@ -50,18 +55,30 @@ class StatRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey)),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          flex: 4,
+          child: Text(
+            '$label:',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey, fontSize: 14.sp),
           ),
-        ],
-      ),
+        ),
+        SizedBox(width: 8.w),
+        Flexible(
+          flex: 5,
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 14.sp),
+          ),
+        ),
+      ],
     );
   }
 }
