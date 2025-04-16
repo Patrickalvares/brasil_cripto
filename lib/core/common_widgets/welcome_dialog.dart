@@ -40,7 +40,7 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
   final _currencyProvider = i<CurrencyProvider>();
   final _onboardingService = i<OnboardingService>();
 
-  ThemeMode _selectedTheme = ThemeMode.system;
+  ThemeMode _selectedTheme = ThemeMode.dark;
   Locale _selectedLocale = const Locale('pt', 'BR');
   String _selectedCurrency = 'usd';
 
@@ -178,9 +178,10 @@ class _WelcomeDialogState extends State<WelcomeDialog> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 32),
-        _buildThemeOption(ThemeMode.system, 'systemTheme'.tr(), Icons.smartphone),
-        _buildThemeOption(ThemeMode.light, 'lightTheme'.tr(), Icons.light_mode),
+
         _buildThemeOption(ThemeMode.dark, 'darkTheme'.tr(), Icons.dark_mode),
+        _buildThemeOption(ThemeMode.light, 'lightTheme'.tr(), Icons.light_mode),
+        _buildThemeOption(ThemeMode.system, 'systemTheme'.tr(), Icons.smartphone),
       ],
     );
   }

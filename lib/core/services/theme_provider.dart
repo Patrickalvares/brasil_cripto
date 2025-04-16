@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ValueNotifier<ThemeMode> {
-  ThemeProvider() : super(ThemeMode.system) {
+  ThemeProvider() : super(ThemeMode.dark) {
     _loadThemeMode();
   }
 
@@ -11,7 +11,7 @@ class ThemeProvider extends ValueNotifier<ThemeMode> {
 
   Future<void> _loadThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
-    final themeModeIndex = prefs.getInt('theme_mode') ?? 0;
+    final themeModeIndex = prefs.getInt('theme_mode') ?? 2;
     value = ThemeMode.values[themeModeIndex];
   }
 
