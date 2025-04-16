@@ -24,6 +24,7 @@ dependencies:
   intl: ^0.19.0
   easy_localization: ^3.0.5
   flutter_screenutil: ^5.9.3
+  lottie: ^3.3.1
 
 dev_dependencies:
   flutter_test:
@@ -35,3 +36,4 @@ flutter:
   uses-material-design: true
   assets:
   - assets/translations/
+  - assets/animations/

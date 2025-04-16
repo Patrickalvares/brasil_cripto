@@ -50,6 +50,7 @@
   "day_fri": "Fri",
   "day_sat": "Sat",
   "limit_exceeded_aguarde": "Rate limit exceeded for the API, wait a few moments and try again",
+  "splash_subtitle": "Track your favorite cryptocurrencies in real-time",
   
   "welcome_title": "Welcome to Brazil Crypto!",
   "welcome_description": "Your app to monitor cryptocurrencies in real-time. Track prices, add to favorites, and stay up to date with the market!",

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +18,8 @@ class WelcomeDialog extends StatefulWidget {
 
     await Future.delayed(const Duration(milliseconds: 200));
 
-    if (true) {
-      showDialog(
+    if (onboardingService.isFirstLaunch) {
+      await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const WelcomeDialog(),

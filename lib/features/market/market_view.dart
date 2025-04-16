@@ -1,4 +1,3 @@
-import 'package:brasil_cripto/core/common_widgets/welcome_dialog.dart';
 import 'package:brasil_cripto/utils/state_ful_base_state.dart';
 import 'package:flutter/material.dart';
 
@@ -25,8 +24,6 @@ class _MarketViewState extends StatefulBaseState<MarketView, MarketViewModel> {
     _scrollController = MarketScrollController(viewModel);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await WelcomeDialog.showIfNeeded(context);
-
       await viewModel.carregarMoedas();
     });
   }

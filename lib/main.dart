@@ -8,6 +8,7 @@ import 'core/services/injections.dart';
 import 'core/services/locale_provider.dart';
 import 'core/services/theme_provider.dart';
 import 'features/home_view.dart';
+import 'features/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,7 +78,7 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
               ),
               themeMode: themeMode,
-              home: const HomeView(),
+              home: const SplashScreen(),
               onGenerateRoute: (settings) {
                 if (settings.name == '/') {
                   final index = settings.arguments as int?;
