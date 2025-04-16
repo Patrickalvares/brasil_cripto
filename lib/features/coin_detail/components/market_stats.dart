@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/services/currency_provider.dart';
+import '../../../core/services/injections.dart';
+
 class MarketStats extends StatelessWidget {
   final double? marketCap;
   final double? totalVolume;
@@ -20,30 +23,56 @@ class MarketStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = NumberFormat.currency(symbol: '\$');
+    final currencyProvider = i<CurrencyProvider>();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('market_stats'.tr(), style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 16),
-        StatRow(
-          label: 'market_cap'.tr(),
-          value: marketCap != null ? formatter.format(marketCap) : '-',
-        ),
-        Divider(color: Theme.of(context).colorScheme.outline),
-        StatRow(
-          label: 'volume_24h'.tr(),
-          value: totalVolume != null ? formatter.format(totalVolume) : '-',
-        ),
-        Divider(color: Theme.of(context).colorScheme.outline),
-        StatRow(label: 'market_rank'.tr(), value: marketCapRank != null ? '#$marketCapRank' : '-'),
-        Divider(color: Theme.of(context).colorScheme.outline),
-        StatRow(label: 'high_24h'.tr(), value: high24h != null ? formatter.format(high24h) : '-'),
-        Divider(color: Theme.of(context).colorScheme.outline),
-        StatRow(label: 'low_24h'.tr(), value: low24h != null ? formatter.format(low24h) : '-'),
-      ],
+    return ValueListenableBuilder(
+      valueListenable: currencyProvider,
+      builder: (context, _, __) {
+        final String currencySymbol = _getCurrencySymbol(currencyProvider.currency);
+        final formatter = NumberFormat.currency(symbol: currencySymbol);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('market_stats'.tr(), style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 16),
+            StatRow(
+              label: 'market_cap'.tr(),
+              value: marketCap != null ? formatter.format(marketCap) : '-',
+            ),
+            Divider(color: Theme.of(context).colorScheme.outline),
+            StatRow(
+              label: 'volume_24h'.tr(),
+              value: totalVolume != null ? formatter.format(totalVolume) : '-',
+            ),
+            Divider(color: Theme.of(context).colorScheme.outline),
+            StatRow(
+              label: 'market_rank'.tr(),
+              value: marketCapRank != null ? '#$marketCapRank' : '-',
+            ),
+            Divider(color: Theme.of(context).colorScheme.outline),
+            StatRow(
+              label: 'high_24h'.tr(),
+              value: high24h != null ? formatter.format(high24h) : '-',
+            ),
+            Divider(color: Theme.of(context).colorScheme.outline),
+            StatRow(label: 'low_24h'.tr(), value: low24h != null ? formatter.format(low24h) : '-'),
+          ],
+        );
+      },
     );
+  }
+
+  String _getCurrencySymbol(String currency) {
+    switch (currency) {
+      case 'brl':
+        return 'R\$';
+      case 'eur':
+        return '€';
+      case 'usd':
+      default:
+        return '\$';
+    }
   }
 }
 
